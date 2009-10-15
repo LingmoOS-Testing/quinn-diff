@@ -85,7 +85,8 @@ parse_sources (sources_info *source)
 	}
 
       /* If we're ignoring 'Architecture: all' packages, check this isn't */
-      if (ignore_arch_all && in_arch_list(source->architecture,"all"))
+      if (ignore_arch_all && in_arch_list(source->architecture, "all")
+	  && !in_arch_list(source->architecture, packages_architecture))
 	{
 	  debug (debug_sources, "parse_sources: ignoring 'Architecture: all' source packages, and %s is ('%s').", source->name, source->architecture);
 	  continue;
