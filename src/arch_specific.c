@@ -35,9 +35,9 @@ GHashTable *arch_specific_packages_hash_table;
 
 void arch_specific_package_free_ht_entry (gpointer key, gpointer package, gpointer cruft);
 void open_arch_specific_file(FILE *fp, char **buffer_p, long *buffer_length);
-void read_arch_specific_packages (const char *buffer_p, const unsigned long buffer_length);
+void read_arch_specific_packages (const char *buffer_p, const long buffer_length);
 void arch_specific_packages_ht_add (char *package_name);
-void check_parseable (const char *buffer_p, const unsigned long buffer_length);
+void check_parseable (const char *buffer_p, const long buffer_length);
 
 /* Public functions */
 
@@ -58,7 +58,7 @@ arch_specific_packages_read (void)
 
   FILE *fp = NULL;
   char *buffer_p;
-  unsigned long buffer_length;
+  long buffer_length;
 
   open_arch_specific_file (fp, &buffer_p, &buffer_length);
   debug (debug_as, "read_arch_specific_file: read %ld bytes of \"%s\"",
@@ -146,13 +146,13 @@ void open_arch_specific_file(FILE *fp, char **buffer_p, long *buffer_length)
 }
 
 
-void read_arch_specific_packages (const char *buffer_p, const unsigned long buffer_length)
+void read_arch_specific_packages (const char *buffer_p, const long buffer_length)
 {
 
   char *line;
   char *architectures;
   char *package_name;
-  unsigned long i;
+  long i;
   unsigned int j, k, l;
 
   check_parseable (buffer_p, buffer_length);
@@ -267,12 +267,12 @@ void arch_specific_packages_ht_add (char *package)
      number of the Packages-arch-specific file; use this to ensure
      we're not trying to parse something we don't understand */
 
-void check_parseable (const char *buffer_p, const unsigned long buffer_length)
+void check_parseable (const char *buffer_p, const long buffer_length)
 {
 
   char *line;
   char *arch_specific_version_string, *errors;
-  unsigned long i;
+  long i;
   long arch_specific_version;
 
   i = 0;
