@@ -43,19 +43,18 @@ debug (const int which, const char *fmt,...)
 void
 debug_help (void)
 {
-
-  printf ("Quinn Diff debugging option, --debug=<octal value> or -D<octal value>:\n\
-  number  description\n\
-       1  General warnings\n\
-       2  Debug information for Sources\n\
-       4  Debug information for Packages\n\
-      10  Debug information for Architecture Specific packages\n\
-      20  Debug information for output functions\n\
-      40  Debug information for version comparison functions\n\
-     100  Debug information for utility functions\n\
-\n\
-Combine debug options with bitwise or.\n\
-Meanings and values subject to change at any time.\n");
+  puts ("Quinn Diff debugging option, --debug=<octal value> or -D<octal value>:");
+  puts ("  number  description");
+  puts ("       1  General warnings");
+  puts ("       2  Debug information for Sources");
+  puts ("       4  Debug information for Packages");
+  puts ("      10  Debug information for Architecture Specific packages");
+  puts ("      20  Debug information for output functions");
+  puts ("      40  Debug information for version comparison functions");
+  puts ("     100  Debug information for utility functions");
+  puts ("");
+  puts ("Combine debug options with bitwise or.");
+  puts ("Meanings and values subject to change at any time.");
   exit (0);
 }
 
