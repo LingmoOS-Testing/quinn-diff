@@ -1,0 +1,405 @@
+quinn-diff (0.67) unstable; urgency=low
+
+  * Link against glib2 instead of glib1.2 (Closes: #400828).
+  * Fix typo in help message (Closes: #437165).
+
+ -- Luk Claes <luk@debian.org>  Mon, 13 Apr 2009 18:09:05 +0000
+
+quinn-diff (0.66) unstable; urgency=low
+
+  * New maintainer.
+
+ -- Luk Claes <luk@debian.org>  Sun, 31 Aug 2008 12:57:44 +0200
+
+quinn-diff (0.65.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Update version compare code from dpkg. (closes: #387220)
+
+ -- Bastian Blank <waldi@debian.org>  Thu, 12 Oct 2006 10:13:54 +0000
+
+quinn-diff (0.65) unstable; urgency=low
+
+  * src/init.c (usage): don't use multi-line string literals as they're
+    deprecated by gcc-3.3.  Thanks to Daniel Schepler
+    <schepler@math.berkeley.edu> for the report.  Closes: #196581
+
+  * debian/control (Standards-Version): bump to 3.5.10.0.
+
+  * debian/rules (clean): clean *~ in any subdir.
+
+ -- James Troup <james@nocrew.org>  Sun,  8 Jun 2003 14:40:43 +0100
+
+quinn-diff (0.64) unstable; urgency=low
+
+  * quinn-diff now distinguishes between 'partial' and 'uncompiled'
+    packages; the former being where some binary packages built by a
+    source package are missing but the packages is otherwise up-to-date
+    and the latter meaning that none of a source package's architecture
+    dependent packages have been recompiled for the architecture.
+
+ -- James Troup <james@nocrew.org>  Thu, 30 Jan 2003 19:05:43 +0000
+
+quinn-diff (0.63) unstable; urgency=low
+
+  * If the binary is newer than the source ensure the binary is built from
+    that source; works around (some) problems with packages lieing about
+    what they build (e.g. #177476).
+  * debian/postinst, debian/prerm: remove; no longer do /usr/doc symlinks.
+  * debian/rules (binary-arch): don't install obsolete postinst or prerm.
+  * debian/rules: use convenince variables for install/gzip etc.
+  * debian/control (Standards-Version): bump to 3.5.8.0.
+
+ -- James Troup <james@nocrew.org>  Thu, 30 Jan 2003 14:48:26 +0000
+
+quinn-diff (0.62) unstable; urgency=high
+
+  * Fix the fix for arch comparisons; further patches from Ryan Murray
+    <rmurray@debian.org>.
+
+ -- James Troup <james@nocrew.org>  Mon, 19 Aug 2002 00:25:24 +0100
+
+quinn-diff (0.61) unstable; urgency=low
+
+  * Patch from Ryan Murray <rmurray@debian.org> to fix arch comparisons.
+
+ -- James Troup <james@nocrew.org>  Sun, 18 Aug 2002 00:55:56 +0100
+
+quinn-diff (0.60) unstable; urgency=low
+
+  * Take the Architecture: field into consideration and ignore packages
+    that are not Architecture: all or the architecture we're interested
+    in.
+
+ -- James Troup <james@nocrew.org>  Thu, 10 Jan 2002 21:22:43 +0000
+
+quinn-diff (0.59) unstable; urgency=medium
+
+  * Fixed a bug in the Packages-arch-specific handling that was causing
+    some packages to be incorrectly marked as architecture specific.
+  * debian/control (Build-Depends) add docbook-utils.
+
+ -- James Troup <james@nocrew.org>  Tue, 18 Dec 2001 01:45:03 +0000
+
+quinn-diff (0.58) unstable; urgency=low
+
+  * src/error.c: Add missing <stdlib.h> include to get prototype for
+    exit(), fixes build on ia64.
+
+ -- James Troup <james@nocrew.org>  Sat,  8 Dec 2001 03:53:51 +0000
+
+quinn-diff (0.57) unstable; urgency=low
+
+  * Fix quinn-diff to handle zero-length (i.e. /dev/null) or almost-empty
+    Packages files.
+  * Add support for -i/--ignore-arch-all which makes quinn-diff ignore any
+    source package marked as 'Architecture: all'.
+  * Document -A/--architecture in manpage and --help.
+  * debian/control (Standards-Version): bumped.
+  * debian/control: Improve grammar in extended description, suggestion
+    from Matthew Wilcox <willy@debian.org>.  closes: #109627
+
+ -- James Troup <james@nocrew.org>  Fri,  7 Dec 2001 02:50:53 +0000
+
+quinn-diff (0.56) unstable; urgency=low
+
+  * Fixed the compiled/out-of-date markers so that they reflect reality a
+    little better.
+
+ -- James Troup <james@nocrew.org>  Thu, 24 May 2001 22:58:46 +0100
+
+quinn-diff (0.55) unstable; urgency=high
+
+  * Fixed a 'free-ing memory twice' crash noticed by Ryan.
+
+ -- James Troup <james@nocrew.org>  Thu, 24 May 2001 16:53:38 +0100
+
+quinn-diff (0.54) unstable; urgency=low
+
+  * Support -A/--architecture to override automagic determination of
+    architecture of Packages file.
+  * debian/control: add missing Build-Depends, update Standards-Version.
+  * Handle duplicates in both Packages and Sources by comparing version
+    numbers and discarding the older copy.
+
+ -- James Troup <james@nocrew.org>  Sun, 20 May 2001 22:19:16 +0100
+
+quinn-diff (0.53) unstable; urgency=low
+
+  * Fix a long-standing bug that was causing the section and priority to
+    disappear from the output for random packages.
+  * A crash on Packages files with nothing but 'Architecture: all'
+    packages has been fixed.
+  * The new Sources and Packages files produced by apt-ftparchive are
+    now handled.
+
+ -- James Troup <james@nocrew.org>  Fri,  1 Sep 2000 18:50:53 +0100
+
+quinn-diff (0.52) unstable; urgency=low
+
+  * debian/copyright: remove references to Linux.  Update location of the
+    GPL.  Remove references to the defunct http://quinn-diff.nocrew.org/.
+  * debian/rules (binary-arch): move to FHS; install documentation into
+    /usr/share/doc/ and manpages into /usr/share/man/.
+  * debian/postinst: add /usr/doc/ symlink.
+  * debian/prerm: remove /usr/doc/ symlink.
+  * debian/rules (binary-arch): install postinst and prerm.
+  * debian/control (Standards-Version): update to 3.2.0.0.
+
+ -- James Troup <james@nocrew.org>  Fri, 18 Aug 2000 23:10:53 +0100
+
+quinn-diff (0.51) unstable; urgency=low
+
+  * Fixes crashes on Sources files without a Section: line. [#41765]
+  * Sync Packages-Arch-Specific with wanna-build CVS copy.
+  * Fix exclusionary entries in Packages-Arch-Specific handling.
+  * Fix spelling of `architeture' in warning.
+
+ -- James Troup <james@nocrew.org>  Sat, 16 Oct 1999 00:55:04 +0100
+
+quinn-diff (0.50) unstable; urgency=low
+
+  * Rewrite.  Quinn Diff now compares a Packages file and a Sources
+    file, i.e. it compares any given architecture to the source not to
+    some other architecture.  This gets us away from the broken model of a
+    primary and secondary architecture, which wasn't always true.  It also
+    allows one to run quinn diff for the i386 ``port''.
+  * Packages marked as hurd-i386 specific in Packages-arch-specific are
+    now correctly noted as such.
+  * There is now a man page.  [#33806]
+  * Packages-arch-specific is now installed into /etc/ and Quinn Diff
+    looks for it there.
+  * debian/control (Recommends): we no longer need python-base.
+  * debian/rules (build): don't run the test suite, it's no longer usable.
+  * debian/rules (binary-arch): compress the new manpage.  Mark
+    /etc/Packages-arch-specific as a conffile.  Other minor changes.
+
+ -- James Troup <james@nocrew.org>  Sun, 30 May 1999 17:37:10 +0100
+
+quinn-diff (0.46) unstable; urgency=low
+
+  * The Packages-arch-specific file can now be used to mark entire source
+    packages as architecture specific by use of a '%' prefix.
+
+ -- James Troup <james@nocrew.org>  Fri,  4 Dec 1998 18:01:29 +0000
+
+quinn-diff (0.45) unstable; urgency=low
+
+  * debian/control (Standards-Version): updated to 2.5.0.0.
+  * debian/rules (binary-arch): install README*, not just `README', into
+    /usr/doc/quinn-diff/.
+  * debian/rules (build): run the new test suite (such as it is).
+  * debian/control: fix typo in long description (`exlcude' ->
+    `exclude'). (Lintian)
+  * create_Packages-source has been sped up more.
+  * Quinn Diff was broken by recent Packages files which has gnome-*
+    packages with Depends lines in excess of 400 characters; sick of
+    hardcoded limits in quinn diff, I've removed them all.
+  * Quinn Diff now uses GTK+'s glib library for hash functions rather than
+    libdb.  libdb was overkill and the version from glibc 2.1 didn't work
+    with quinn diff.  glib's hash functions are more light weight and
+    better suited to what quinn diff is doing and switching to it fixed
+    several previously unresolveable problems with the new use of
+    dynamically allocated memory for all strings related to input.
+  * Quinn Diff now uses less memory after the plugging of some memory
+    leaks and more intelligent freeing of buffers.
+  * A bug in code that tried to handle broken Packages-sources file has
+    been fixed so it won't output epochs as part of a source package
+    version number.
+
+ -- James Troup <james@nocrew.org>  Wed,  2 Dec 1998 01:52:31 +0000
+
+quinn-diff (0.44) unstable; urgency=low
+
+  * debian/control (Recommends): recommend debianutils (>= 1.7) for
+    mktemp.
+  * A stupid bug which was causing problems (alphabetically early
+    Architecture: all packages were being erroneously listed as
+    uncompiled) on underpopulated architectures (e.g. hurd-i386) has been
+    fixed.
+  * The example scripts have been improved in small ways and fixed in some
+    cases (quinn-diff_split_by_status has been broken since 0.41.)
+
+ -- James Troup <james@nocrew.org>  Sat, 17 Oct 1998 05:09:26 +0100
+
+quinn-diff (0.43) unstable; urgency=low
+
+  * debian/control (Recommends): downgrade python-base dependency to a
+    recommendation and also recommend lftp which all the snarf_Packages-*
+    example scripts use.
+  * debian/control: improved extended description.
+  * quinn diff will now die on duplicates in the Packages-source file as
+    this invariable represents a mirror in a bad way and quinn diff's
+    output will be compromised.
+  * A heuristic designed to help spot bad mirrors, which was actually
+    causing information lossage in rare cases, has been disabled.
+  * quinn diff now checks for a version string in the first line of
+    Packages-arch-specific; if it finds a version newer than it can parse,
+    it will refuse to even try.
+  * quinn diff now supports exclusionary architecture fields in the
+    Packages-arch-specific-file, e.g. "!m68k" means that the package is
+    suitable for all architectures _except_ m68k.
+
+ -- James Troup <james@nocrew.org>  Wed,  7 Oct 1998 11:39:30 +0100
+
+quinn-diff (0.42) unstable; urgency=low
+
+  * debian/rules (binary-arch): no need for fix_scripts anymore.
+  * debian/fix_scripts: removed.
+  * debian/control (Depends): depend on python-base for
+    create_Packages-source.
+  * debian/copyright: new maintainer address.
+  * Quinn Diff now accepts a -o/--source-packages option for specifiying
+    an alternate name for Packages-source.
+  * A spurious debugging error() call which was left in by mistake has
+    been removed.
+  * Quinn diff will no longer crash on malformed Packages-* files.
+  * snarf_Packages-source has been supplemented by a python script to
+    replace the spawning of several thousands seds, speeding it up by some
+    26 times or more.
+  * Quinn diff will now complain loudly about duplicates in the
+    Packages-source file and die on libdb-related errors.
+  * Quinn diff no longer tries to guess if the package is libc5 or libc6
+    based as this information was only useful during the libc5 -> libc6
+    conversion process hamm underwent.
+
+ -- James Troup <james@nocrew.org>  Sun, 27 Sep 1998 14:43:58 +0100
+
+quinn-diff (0.41) unstable; urgency=low
+
+  * debian/control (Maintainer): new address.
+  * Quinn diff now handles the long version strings like
+    "4.17-4.m68k.objc.threads.hwwp.fpu.gnat" found in slink.
+  * The snarf_Packages-source script has been rewritten to be less
+    insecure, more flexible and suck less.
+  * The configure script now supports --with-includes, --with-efence and
+    --with-debug.
+  * The -D/--debug option accepts "help" as an argument and displays
+    help information on receiving it.
+
+ -- James Troup <james@nocrew.org>  Sat, 18 Jul 1998 23:30:20 +0100
+
+quinn-diff (0.40) unstable; urgency=low
+
+  * --debug short form -d becomes -D, per YAWN and dpkg.
+  * New option -w/--visible-warn, controls what category of suspect
+    packages are displayed.
+  * debian/rules (binary-arch): call fix_scripts.
+  * debian/fix_scripts: fix the bang path of shell scripts on the fly.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Tue, 23 Jun 1998 19:38:51 +0200
+
+quinn-diff (0.32) unstable; urgency=high
+
+  * Umm, duh, 0.31 was missing the quinn diff binary. Thanks to Christian
+    T. Steigies <exp114@physik.uni-kiel.de> for noticing my cluelessness.
+  * debian/rules (binary-arch): pass "`pwd`/debian/tmp/usr/" not
+    "debian/tmp/usr/" as the latter has the Makefile installing quinn diff
+    into src/debian/tmp/usr/.
+  * debian/control (Standards-Version): updated to 2.4.1.0.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Wed,  6 May 1998 18:42:59 +0200
+
+quinn-diff (0.31) unstable; urgency=low
+
+  * Most of the example scripts have been updated so that they work again.
+  * Quinn Diff will now print "uncompiled" or "out-of-date" for each
+    package depending on whether or not the package has ever been compiled
+    on the secondary architecture before or not.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Sat, 18 Apr 1998 19:53:03 +0200
+
+quinn-diff (0.30) unstable; urgency=low
+
+  * The --warn-missing-lines and --warn-duplicates command line switches
+    no longer exist.  --warn-missing-lines is now implemented in a more
+    sane fashion with checks for existence only done on relevant lines,
+    and --warn-duplicates is now enabled through the new --debug switch.
+
+  * Quinn Diff will no longer die on duplicate packages in the
+    Packages-arch-specific file, it'll will (silently or not, as --debug
+    dictates) ignore the duplicates.
+
+  * Quinn Diff's command line interface has changed.  It's no longer
+    necessary (or even possible) to specify the two Packages files as
+    arguments, instead there are 3 new command line options:
+
+     -a --arch-specific-packages  filename of Packages-arch-specific file.
+                                   default: Packages-arch-specific in cwd
+     -p --primary-packages        filename of primary architectures Packages file.
+                                   default: Packages-primary in cwd
+     -s --secondary-packages      filename of secondary architectures Packages file.
+                                   default: Packages-secondary in cwd
+
+  * Quinn Diff now correctly exits with an error message when passed an
+    unrecognised command line option.
+
+  * Quinn Diff now requires a new file Packages-sources, this file lists
+    the section and version number of every source package.  There is a
+    script (quinn1.3.sh) as a (poor) example of how to generate a
+    Packages-sources file.
+
+  * Quinn Diff has a new output format:
+
+     [optional]   oldlibs/        pam: 0.57b-0.2 is newer than 0.57b-0. [libc6]
+
+    becomes
+
+     libs/pam_0.57b-0.2.dsc [optional:libc6]
+
+    The section and version are now correct for the source package,
+    courtesy of Packages-sources.
+  * debian/rules (binary-arch): install new THANKS file.
+  * debian/rules (build): don't override the default CFLAGS.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Fri, 10 Apr 1998 23:14:40 +0200
+
+quinn-diff (0.20) unstable; urgency=low
+
+  * Quinn Diff now knows about multi-binary source packages, and lists
+    them instead of listing several individual binary packages as if they
+    bore no relation to each other.  This still needs some work
+    (e.g. section and version are wrong), but it is a start.
+  * A new example script is provided, called quinn4.sh, which splits quinn
+    diff output into two parts: unported packages and out-of-date
+    packages.
+  * Lots of updates to Packages-arch-specific have been made.
+  * A bug was fixed where two packages on one architecture with the same
+    name would kill quinn diff.
+  * debian/copyright: general update.  GPL in /usr/doc/copyright is no
+    longer compressed.  Update FSF's address.
+  * debian/control (Section): Change to devel.
+  * debian/control (Priority): Change to extra.
+  * debian/control (Standards-Version): Upgrade to 2.4.0.0.
+  * debian/control (short description): improved.
+  * debian/rules: rewritten.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Thu,  9 Apr 1998 13:14:01 +0200
+
+quinn-diff (0.13) unstable; urgency=low
+
+  * New version which supports exclusion of architecture specific files,
+    has an indicator of whether or not a package needs X11 to build and
+    quinn1.sh now uses ftpget and fetches compressed Packages files.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Mon, 24 Nov 1997 01:01:47 +0100
+
+quinn-diff (0.12) unstable; urgency=medium
+
+  * New version which fixes a bug with architectures (e.g. sparc) whose
+    first package is Architecture: all.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Sat,  6 Sep 1997 16:12:40 +0100
+
+quinn-diff (0.11) unstable; urgency=medium
+
+  * New version which fixes several bugs, adds libc5/6 indicator to the
+    output and removes user-visible i386 & m68k hardcodedness.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Thu,  4 Sep 1997 22:17:11 +0200
+
+quinn-diff (0.02) unstable; urgency=low
+
+  * Initial release.
+
+ -- James Troup <jjtroup@comp.brad.ac.uk>  Fri,  4 Jul 1997 23:48:18 +0100

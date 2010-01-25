@@ -1,0 +1,133 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V3.1//EN">
+
+<refentry>
+ <docinfo>
+   <address><email>james@nocrew.org</email></address>
+   <author><firstname>James</firstname> <surname>Troup</surname></author>
+   <copyright><year>1997-2001</year> <holder>James Troup</holder></copyright>
+   <date>7 December 2001</date>
+ </docinfo>
+
+  <refmeta>
+    <refentrytitle>quinn-diff</>
+    <manvolnum>1</>
+  </refmeta>
+
+  <!-- Man page title -->
+  <refnamediv>
+    <refname>quinn-diff</>
+    <refpurpose>Compare a Packages and Sources file</>
+  </refnamediv>
+
+  <!-- Arguments -->
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>quinn-diff</>
+      <arg><option><replaceable>options</replaceable></></arg>
+      <arg><option><replaceable>...</replaceable></option></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <RefSect1><Title>Description</>
+    <para>
+      <command>quinn-diff</command> compares a Sources file and a Packages files to determine which programs need (re)compiled from source for any given architecture.
+    </PARA>
+    <para>
+      <command>quinn-diff</command> knows about architecture specific packages (e.g. lilo) and can easily exclude them via a Packages-arch-specific file.  The output is a list of source packages complete with accurate section and version information, suitable for use in build daemons or just in a script to auto-snarf the necessary source.
+    </para>
+  </REFSECT1>
+
+  <RefSect1><Title>Options</>
+
+    <VariableList>
+
+      <varlistentry>
+	<term><option>-a/--arch-specific-packages=<replaceable>file</replaceable></option></term>
+	<listitem>
+	  <para>Specify the location of the <literal>Packages-arch-specific</literal> file.  The default is <literal>/etc/Packages-arch-specific</literal>.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-A/--architecture=<replaceable>architecture</replaceable></option></term>
+	<listitem>
+	  <para>Specify the architecture of the <literal>Packages</literal> file.  If this option is not given, <command>quinn-diff</command> will try to determine the architecture from the contents of the <literal>Packages</literal> file.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-D/--debug=<replaceable>octal value</replaceable></option></term>
+	<listitem>
+	  <para>Enable debug output; see <literal>-Dhelp</literal> or <literal>--debug=help</literal> for details on possible values.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-h/--help</option></term>
+	<listitem>
+	  <para>Display usage help and then exit.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-i/--ignore-arch-all</option></term>
+	<listitem>
+	  <para>If this option is enabled <command>quinn-diff</command> will ignore source packages which are marked as '<literal>Architecture: all</literal>'.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-p/--packages=<replaceable>file</replaceable></option></term>
+	<listitem>
+	  <para>Specify the location of the <literal>Packages</literal> file.  The default is <literal>Packges</literal> in the current directory.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-s/--sources=<replaceable>file</replaceable></option></term>
+	<listitem>
+	  <para>Specify the location of the <literal>Sources</literal> file.  The default is <literal>Sources</literal> in the current directory.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-w/--warn-older</option></term>
+	<listitem>
+	  <para>If this option is enabled <command>quinn-diff</command> will warn when a package is newer in the <literal>Packages</literal> file than it is in the <literal>Sources</literal> file.</para>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term><option>-V/--version</option></term>
+	<listitem>
+	  <para>Display the version number and then exit.</para>
+	</listitem>
+      </varlistentry>
+
+    </VariableList>
+  </RefSect1>
+
+  <RefSect1><Title>Diagnostics</>
+    <para>
+      <command>quinn-diff</command> returns zero on normal operation, non-zero on error.
+    </PARA>
+  </RefSect1>
+
+  <RefSect1><Title>Bugs</>
+    <para>
+      The most obvious known problem is that <command>quinn-diff</command> trusts the <literal>Binary:</literal> field from the <literal>Sources</literal> file which is not a good idea.  However this affects only a small number of packages and is non-trivial to fix.
+    </PARA>
+  </RefSect1>
+
+  <refsect1>
+    <title>Acknowledgements</title>
+    <para>Special thanks to NoCrew for providing unrewarding and generous donation of network services; without them I wouldn't have had an FTP site, a web site, CVS or AnonCVS.</para>
+  </refsect1>
+
+ <RefSect1><Title>Author</title>
+   <para>
+   quinn-diff was written by James Troup <email>james@nocrew.org</email>.
+   </para>
+ </RefSect1>
+
+</refentry>

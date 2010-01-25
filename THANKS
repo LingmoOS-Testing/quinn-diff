@@ -1,0 +1,28 @@
+Quinn Diff THANKS file
+
+Quinn Diff was written by James Troup.  Many people further
+contributed to Quinn Diff by reporting problems, suggesting various
+improvements or submitting actual code.  Here is a list of these
+people.  Please help me keep it complete and exempt of errors.
+
+Special thanks must go to NoCrew for providing unrewarding and
+generous donation of network services; without them we would not have
+an FTP site, a web site, CVS or AnonCVS.
+
+Bdale Garbee             <bdale@debian.org>
+Chris Chimelis           <chris@debian.org>
+Chris Lawrence           <lawrencc@debian.org>
+Christian T. Steigies    <cts@debian.org>
+Hartmut Koptein          <koptein@debian.org>
+Joey Hess                <joeyh@debian.org>
+Juan Cespedes            <cespedes@debian.org>
+Lari Kovanen             <larkov@thor.lib.chalmers.se>
+Mark Baker               <mbaker@debian.org>
+Michael Alan Dorman      <mdorman@debian.org>
+Michael Schmitz          <schmitz@debian.org>
+Roman Hodek              <roman@debian.org>
+Ryan Murray		 <rmurray@debian.org>
+Stefan Berndtsson        <stefan@nocrew.org>
+Steve Bagley		 <sbagley@innotts.co.uk>
+Sven Rudolph             <sr1@debian.org>
+Vincent Renardias        <vincent@debian.org>

@@ -1,0 +1,54 @@
+#! /bin/bash
+
+# Script to create/update Packages-primary
+# Writes output to ./Packages-primary
+
+# This script depends on ftpget, found in the lftp package.  It should
+# be customized for your own use, as chances are you have a mirror
+# closer to you than Lancaster University in the UK.
+
+debian_mirror=sunsite.doc.ic.ac.uk
+debian_mirror_dir=/pub/computing/operating-systems/linux/debian
+debian_non_us_mirror=ftp.lh.umu.se
+debian_non_us_mirror_dir=/pub/linux/debian-non-US
+
+# Alterable through command line options
+
+distribution=unstable
+non_us_distribution=hamm # Lame non_us FTP site structure and maintenance
+component=main 
+architecture=i386
+verbose=""
+
+####################################################################3
+# Write usage message
+usage() {
+	echo "usage: $progname [-a|--architecture] [-c|--component] 
+       [-d|--distribution] [-v|--verbose]" 1>&2
+}
+####################################################################3
+
+progname="$0"
+loop=yes
+while [ $loop = yes ]
+do
+        case "$1" in
+        -a|--architecture) architecture="$2"; shift 2;;
+	-c|--component)    component="$2"; shift 2;;
+        -d|--distribution) distribution="$2"; non_us_distribution="$2"; shift 2;;
+        -q|--queit)        verbose="-q"; shift;; 
+        -v|--verbose)      verbose="-v" ; shift ;;
+        --)                shift; loop=no ;;
+        -h|--help)         usage; exit 0 ;;
+        -*)                error "unknown option $1" ;;
+        *)                 loop=no ;;
+        esac
+done
+
+if [ "$component" = "non_us" ]; then
+    ftpget $verbose $debian_non_us_mirror $debian_non_us/$non_us_distribution/$component/binary-$architecture/Packages.gz
+else
+    ftpget $verbose $debian_mirror $debian_mirror_dir/dists/$distribution/$component/binary-$architecture/Packages.gz
+fi
+zcat Packages.gz > Packages-primary
+rm -f Packages.gz

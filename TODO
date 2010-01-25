@@ -1,0 +1,26 @@
+<rant>
+GAR! This code is HORRIBLE.  I *SUCK*.  parse_package() is an
+abomination... all the sad stupid little hacks (e.g. the code in
+parse_sources() to split up the Binary: field.. I mean, that's what?
+One line in python or perl.), all the stupid assumptions
+(e.g. Package: being the first field) etc. etc.
+</rant>
+
+[*] compiled/out-of-date needs to take into account arch: all packages.
+
+[*] .ruari-quinn_rc support
+
+[*] Add configure time tests for __attribute__ support.
+
+[*] Does Packages-arch-specific really need to buffer lines?
+
+[*] Improve junk.sh to check the exit code of quinn diff and do clever
+    things if it fails (e.g. try another mirror)
+
+[*] Re-add version number comparsions optionally
+
+[*] Variable (printf style) output format?
+
+[*] Documentation.
+
+[*] Test suite.

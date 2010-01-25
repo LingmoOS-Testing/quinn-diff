@@ -1,0 +1,82 @@
+#!/usr/bin/make -f
+# debian/rules file - for Quinn Diff (0.65)
+# Based on the sample debian/rules file - for GNU Hello (1.3).
+# Copyright 1994,1995 by Ian Jackson.
+# Copyright 1997-2003 by James Troup.
+# I hereby give you perpetual unlimited permission to copy,
+# modify and relicense this file, provided that you do not remove
+# my name from the file itself.  (I assert my moral right of
+# paternity under the Copyright, Designs and Patents Act 1988.)
+# This file may have to be extensively modified
+
+install_dir=install -d -m 755
+install_file=install -m 644
+install_script=install -m 755
+compress=gzip -9v
+
+build:
+	$(checkdir)
+	./configure --prefix=/usr --sysconfdir=/etc
+	$(MAKE)
+	touch build
+
+clean:
+	$(checkdir)
+	[ ! -f Makefile ] || $(MAKE) distclean
+	-rm -rf build debian/tmp debian/files* debian/substvars*
+	find . -name \*~ | xargs rm -vf
+
+binary-indep: checkroot build
+	$(checkdir)
+
+binary-arch: checkroot build
+	$(checkdir)
+
+	-rm -rf debian/tmp
+	$(install_dir) debian/tmp/DEBIAN
+
+	$(MAKE) INSTALL_PROGRAM='install -s' \
+		prefix=$$(pwd)/debian/tmp/usr \
+		mandir=$$(pwd)/debian/tmp/usr/share/man \
+		sysconfdir=$$(pwd)/debian/tmp/etc install
+	$(compress) debian/tmp/usr/share/man/man1/*
+	$(install_file) debian/conffiles debian/tmp/DEBIAN/
+
+	$(install_dir) debian/tmp/usr/share/doc/quinn-diff/
+	$(install_file) README NEWS THANKS TODO doc/README.silly-names debian/tmp/usr/share/doc/quinn-diff/
+	$(install_file) debian/changelog debian/tmp/usr/share/doc/quinn-diff/changelog.Debian
+	$(install_file) ChangeLog debian/tmp/usr/share/doc/quinn-diff/ChangeLog.main
+	$(install_file) src/ChangeLog debian/tmp/usr/share/doc/quinn-diff/ChangeLog.src
+	$(install_file) example_scripts/ChangeLog \
+			debian/tmp/usr/share/doc/quinn-diff/ChangeLog.scripts
+	$(compress) debian/tmp/usr/share/doc/quinn-diff/*
+	ln -s ChangeLog.src.gz debian/tmp/usr/share/doc/quinn-diff/changelog.gz
+	$(install_file) debian/copyright debian/tmp/usr/share/doc/quinn-diff/
+
+	$(install_dir) debian/tmp/usr/share/doc/quinn-diff/examples/
+	$(install_script) example_scripts/quinn-diff* example_scripts/snarf* \
+			example_scripts/junk.sh \
+			debian/tmp/usr/share/doc/quinn-diff/examples/
+
+	dpkg-shlibdeps ./src/quinn-diff
+	dpkg-gencontrol -isp
+	chown -R root.root debian/tmp
+	chmod -R go=rX debian/tmp
+	dpkg --build debian/tmp ..
+
+define checkdir
+	test -f src/parse_sources.c -a -f debian/rules
+endef
+
+# Below here is fairly generic really
+
+binary:		binary-indep binary-arch
+
+source diff:
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+checkroot:
+	$(checkdir)
+	test root = "`whoami`"
+
+.PHONY: binary binary-arch binary-indep clean checkroot

@@ -1,0 +1,72 @@
+#! /bin/sh
+
+# Script to create/update Packages-source
+# Writes output to ./Packages-source
+
+# This script depends on lftp.  You should alter the debian_mirror
+# line below as chance are you have a mirror closer to you than
+# Lancaster University in the UK.
+
+debian_mirror=sunsite.doc.ic.ac.uk
+debian_mirror_dir=/pub/computing/operating-systems/linux/debian
+debian_non_us_mirror=ftp.lh.umu.se
+debian_non_us_mirror_dir=/pub/linux/debian-non-US
+
+# Alterable through command line options
+
+distribution=unstable
+non_us_distribution=hamm # Lame non_us FTP site structure and maintenance
+component=main 
+
+# Needs to be kept uptodate by hand.
+
+section="base admin comm devel doc editors electronics games graphics hamradio interpreters libs mail math misc net news oldlibs otherosfs shells sound tex text utils web x11"
+
+####################################################################3
+# Write usage message
+usage() {
+	echo "usage: $progname [-a|--architecture] [-c|--component] 
+       [-d|--distribution]" 1>&2
+}
+####################################################################3
+
+set -e
+
+progname="$0"
+loop=yes
+while [ $loop = yes ]
+do
+        case "$1" in
+	-c|--component)    component="$2"; shift 2;;
+        -d|--distribution) distribution="$2"; non_us_distribution="$2"; shift 2;;
+        --)                shift; loop=no ;;
+        -h|--help)         usage; exit 0 ;;
+        -*)                error "unknown option $1" ;;
+        *)                 loop=no ;;
+        esac
+done
+
+tmpdir=/tmp/quinn_diff.$$
+
+mkdir $tmpdir || exit 1
+
+trap 'rm -rf $tmpdir ; exit 1' 1 2 3 13 15
+
+echo "open ftp://$debian_mirror/$debian_mirror_dir/dists/$distribution/$component/source" > $tmpdir/bar
+
+for i in $section; do
+  echo "cd $i; nlist *.dsc > $tmpdir/foo.$i; cd .." >> $tmpdir/bar;
+done
+
+lftp -f $tmpdir/bar > /dev/null 2>&1
+
+export PATH=$(dirname $0):$PATH 
+
+create_Packages-source $tmpdir/foo.* > $tmpdir/baz
+
+sort $tmpdir/baz > Packages-source
+
+# Check for dups and bail out.
+
+rm -fr $tmpdir
+for i in $section; do rm -f $tmpdir/foo.$i; done

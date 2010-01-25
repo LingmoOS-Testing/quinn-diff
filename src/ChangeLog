@@ -1,0 +1,972 @@
+2003-06-08  James Troup  <james@nocrew.org>
+
+	* init.c (usage): don't use multi-line string literals since
+	they've been deprecated in gcc-3.3.
+
+2003-01-30  James Troup  <james@nocrew.org>
+
+	* output.c (output_ht_add): make the key a distinct copy of
+	source->name so that we can cleanly remove superseded entries from
+	the hash table.
+	(output_free_ht_entry): likewise, free the key separately.
+	(output_ht_remove): new function; removes an entry from the output
+	hash table.
+	(output_display_package): update for new 'partial' status.  Also
+	reword "OLDER" warning to avoid references to "secondary" (heh).
+	(output_ht_add): lots of changes so we can distinguish between
+	'uncompiled', 'partial' and 'out-of-date'.  The latter trumps the
+	former two, but an 'uncompiled' package now really has none of the
+	architecture dependent .debs compiled for the architecture.  The
+	'compiled' boolean is split into 'partial' and 'missing' booleans.
+	The duplicate package and c_v_r handling is rewritten.  No longer
+	uses the useless 'errors' counter.
+
+	* parse_packages.c (packages_ht_add): also store the architecture.
+	(packages_free_ht_entry): and free it.
+	(process_packages): and pass it.  Error out if we encouter a
+	package with no Architecture: field.
+
+	* parse_sources.c (parse_sources): for uncompiled binary packages
+	pass the compare_versions_result as 0, not -1.  Correct "if binary
+	is newer" check to be >= 1, not == 1.  Add arch: all packages into
+	the output table with a c_v_r of 0.
+
+2003-01-20  James Troup  <james@nocrew.org>
+
+	* parse_sources.c (parse_sources): adapt for changes in the
+	packages hash table.  If the binary version is newer than the
+	source version ensure the binary is actually from this source
+	package.
+
+	* parse_packages.c (process_packages): makes packages->source be
+	just the source package name (i.e. without the version if there is
+	one).
+	(packages_ht_add): store both the source package name and the
+	source version.
+	(packages_free_ht_entry): free the source package name too.
+	(process_packages): adapt to packages_ht_add() and
+	packages_ht_lookup() changes.
+	(packages_ht_lookup): return a structure (of source name +
+	version) rather than just the version.
+
+2002-08-19  Ryan Murray  <rmurray@debian.org>
+
+	* arch_specific.c (read_arch_specific_packages): replace tabs with
+	spaces when reading in Packages-Arch-Specific.
+	(read_arch_specific_packages): when handling exclusionary
+	architecture lines, strip any "!"'s before calling in_arch_list().
+
+2002-08-19  James Troup  <james@nocrew.org>
+
+	* parse_sources.c (parse_sources): use packages_architecture
+	rather than binary_architecture_match.
+
+	* globals.h (binary_architecture_match): drop
+	binary_architecture_match; it's unnecessary with in_arch_list().
+	* parse_packages.c (determine_packages_architecture): likewise.
+	* main.c (main): likewise.
+
+2002-08-18  James Troup  <james@nocrew.org>
+
+	* main.c (main): initalize the fields we read from the Packages
+	file; noticed by valgrind.
+
+	* utils.c (read_line): correct off-by-one found by valgrind, we
+	need to check for max_length-1, rather than max_length.
+
+2002-08-18  Ryan Murray  <rmurray@debian.org>
+
+	* parse_packages.c (process_packages): correct architecture
+	comparison.
+
+	* utils.c (in_arch_list): new function.
+	* arch_specific.c (read_arch_specific_packages): use it.
+	* parse_sources.c (parse_sources): likewise.
+
+2002-01-10  James Troup  <james@nocrew.org>
+
+	* parse_packages.c (process_packages): check the architecture
+	field matches packages_architecture or 'all'.
+
+2001-12-18  James Troup  <james@nocrew.org>
+
+	* arch_specific.c (read_arch_specific_packages): check for '#'
+	(beginning of comment marker) in the line, not the buffer.
+
+2001-12-08  James Troup  <james@nocrew.org>
+
+	* error.c: add missing <stdlib.h> include for exit() prototype.
+
+2001-12-07  James Troup  <james@nocrew.org>
+
+	* parse_sources.c (parse_sources): skip 'Architecture: all'
+	packages if we're ignoring them.
+
+	* main.c (main): initialize ignore_arch_all global.
+	* globals.h: likewise.
+
+	* init.c (parse_opt): support new -i/--ignore-arch-all argument.
+	(usage): likewise.
+
+	* parse_packages.c (process_packages): if packages->name is null,
+	skip the record.
+
+	* utils.c (read_file): whine about zero-length files but don't
+	abort.
+
+	* init.c (usage): document -A/--architecture.
+
+2001-05-24  James Troup  <james@nocrew.org>
+
+	* output.c (output_ht_add): use the new `compiled' flag properly
+	so that if any one binary package of a MBS has been compiled for
+	the architecture it's correctly seens as compiled rather than out
+	of date.
+
+	* parse_packages.c (process_packages): don't free old_version when
+	checking for duplicates; it belongs to the hash table.
+
+2001-05-20  James Troup  <james@nocrew.org>
+
+	* output.c (output_ht_add): handle duplicates properly
+	(i.e. discard older versions).
+	* parse_packages.c (process_packages): likewise.
+
+2001-03-28  James Troup  <james@nocrew.org>
+
+	* init.c (parse_opt): support -A/--architecture to specify the
+	architecture of the Packages file and override the automagic
+	determination.
+
+	* main.c (main): only call determine_packages_architecture() if
+	packages_architecture is not defined.
+
+2000-09-01  James Troup  <james@nocrew.org>
+
+	* parse_packages.c (process_packages): redo to use parse_package()
+	like parse_sources() does to fix new Packages files as generated
+	by apt-ftparchive.
+
+	* utils.c (parse_package): use strncasemp() as apt-ftparchive
+	sorts source: which makes it Source:.
+	* utils.c (get_field): likewise.
+
+	* parse_packages.c (determine_packages_architecture): don't
+	segfault on Packages files with Arch: all packages only
+	(e.g. current mipsel tree).
+
+	* utils.c (parse_package): adjust for the fact that we a) don't
+	know what the package name is anymore and b) have to update the
+	buffer position.
+
+	* parse_sources.c (parse_sources): don't assume that Package: is
+	the first field; grab it like any other using parse_packages().
+
+1999-10-16  James Troup  <james@nocrew.org>
+
+	* parse_sources.c (parse_sources): correct spelling of
+	`architecture' in warning message.
+
+	* arch_specific.c (read_arch_specific_packages): use
+	packages_architecture for exclusionary matching as
+	binary_architecture_match is prefixed with a space and will always
+	fail.
+
+1999-10-15  James Troup  <james@nocrew.org>
+
+	* parse_sources.c (parse_sources): handle files without a Section
+	and/or Priority.
+
+1999-05-30  James Troup  <james@nocrew.org>
+
+	* vercmp.c (compare_versions): Adapt to new structure, just
+	variable name changes.
+
+	* utils.c (quinn_hash_function): updated for glib 1.2; use
+	gconstpointer, not gpointer for argument.
+	(quinn_key_compare_function): ditto.
+	(parse_package): use xfree().
+	(get_field): ditto.
+	(skip_line): buffer counter is long, not int.
+	(skip_to_next_package): ditto.
+	(read_line): ditto.
+	(determine_needsx): removed; oboslete.
+	(priority_to_int): removed; obsolete.
+
+	* primary.c: removed; obsolete.
+	* secondary.c: ditto.
+
+	* parse_sources.c: new file contains a rewrite of what use to be
+	the primary architecture handling.
+
+	* parse_packages.c: new file, contains what use to be the
+	secondary architecture handling.
+
+	* output.c (output_ht_add): Adapt to new structure; simplified
+	lots.
+	(output_ht_mbs_update): removed; obsolete.
+	(output_display_package): adapt to new structure; massively
+	simplified.
+	(output_free_ht_entry): use xfree() and xfree_if_non_null().
+
+	* main.c (main): Adapt to new structure; lots of variable names
+	changed.  Large chunks of code removed and put in
+	parse_packages.c.  Use xfree(), free more.
+
+	* list.c (qlist_destroy): use xfree().
+
+	* init.c (parse_opt): updated for new structure.  Drop support for
+	--visible-warn-level and --packages-sources.  Now use --sources/-s
+	and --packages/-p to specify the names of the primary input files.
+	Use xfree() and xfree_if_non_null().
+	(usage): update help text.
+
+	* common.h: warn_older should be a boolean; drop
+	visible_warn_level.
+
+	* arch_specific.c (arch_specific_packages_read): use xfree().
+	(arch_specific_package_free_ht_entry): ditto.
+	(read_arch_specific_packages): ditto.
+	(check_parseable): ditto.
+
+	* error.c (debug_help): update for other changes.
+
+	* common.h: new global variable binary_architecture_match.
+
+	* arch_specific.c (read_arch_specific_packages): use
+	binary_architecture_match and use an unsigned long, not an
+	unsigned int for the buffer counter.
+	(check_parseable): unsigned long, not int.
+
+	* main.c (main): make a copy of the old secondary_architecture
+	field prefixed with a space as binary_architecture_match, which
+	can be used for accurate architecture specific checking.
+
+1998-12-04  James Troup  <james@nocrew.org>
+
+	* primary.c (process_primary): Handle '%'-prefixed entries in
+	Packages-arch-specific.  If there's a source: line, test for it as
+	a %-prefixed entry in the arch specific packages hash table; if
+	there's not, test for the package name as a %-prefixed entry (on
+	the grounds that, e.g. binutils has no source: line, but is still
+	from the source package binutils).
+
+1998-12-02  James Troup  <james@nocrew.org>
+
+	* vercmp.c: move some private definitions out of the header file
+	to here.
+	(compare_versions): changes in sync with the rest of the code; we
+	are now simply passed two version strings and a package name (for
+	error messages).
+
+	* utils.h (strmove): new function.
+
+	* utils.c (quinn_hash_function): new; used by glib's hashing
+	functions.
+	(quinn_key_compare_function): ditto.
+	(parse_package): no more hard-coded static length strings.
+	(get_field): ditto.
+	(read_line): do things dynamically.  (This is the core change in
+	the change over to dynamically allocated memory for strings
+	related to input as this function is used by just about everything
+	that deals with Packages-*).  Also do proper bounds checking so we
+	don't segfault on prematurely terminated Packages-* files.
+	(determine_needsx): no more hard-coded static length strings.
+	(xstrdup): new function.
+
+	* output.c (output_display_package): Fixed not to ever display a
+	version number with an epoch, even when trying to cope with a
+	package with no entry in Packages-source.  Upgrade debug
+	(debug_warn) -> error.
+
+	* main.c (main): no more hard-coded static length strings.  Adapt
+	for changes to the rest of the source made in the process of
+	migrating from libdb.
+	* primary.c (process_primary): ditto.
+
+	* init.c (parse_opt): handle dynamically allocated strings for
+	Packages-* filenames.
+
+	* arch_specific.c: rewritten to not use hard-coded static length
+	strings and to use hash functions from glib rather than libdb.
+	* output.c: ditto.
+	* source.c: ditto.
+	* secondary.c: [used to be hash.c] ditto.
+
+Sat Oct 17 04:20:38 1998  James Troup  <james@nocrew.org>
+
+	* primary.c (process_primary): Improved debug() messages.
+	* main.c (main): Ditto. 
+	
+	* main.c (main): Reset the buffer position for Packages-secondary
+ 	after automagically determining the architecture.  Otherwise if
+ 	the first (and even following ones) are Architecture: all, it/they
+ 	would have been viewed as already read and thus not added to the
+ 	secondary hash table.
+
+Wed Oct  7 10:40:52 1998  James Troup  <james@nocrew.org>
+
+	* arch_specific.c (check_parseable): new function; checks for a
+ 	magic string in the Packages-arch-specific file and gleams from
+ 	that the version number and thus whether or not we can grok it.
+	(read_arch_specific_packages): Handle exclusionary architecture
+ 	fields; e.g. "!m68k".
+
+Tue Oct  6 23:28:10 1998  James Troup  <james@nocrew.org>
+
+	* arch_specific.c (arch_specific_read): remove spurious \n from
+ 	debug string.
+	* source.c (source_packages_read): ditto.
+
+	* output.c (output_display): disable SOURCE_VERSION_MISMATCH
+ 	warning as it fails in the case of an NMU of a package with an
+ 	explicit source version in the Packages file which has yet to be
+ 	compiled on the primary architecture.  Thanks to Roman and
+ 	Christian for helping to track this down.
+
+Fri Oct  2 13:30:57 1998  James Troup  <james@nocrew.org>
+
+	* source.c (read_source_packages): die on duplicates.  After
+ 	discussion with Roman, I've decided that the complex alternative
+ 	which would more gracefully handle common cases of fscked mirrors
+ 	is too much work.
+
+Sun Sep 27 14:04:52 1998  James Troup  <james@nocrew.org>
+
+	* arch_specific.c (open_arch_specific_file): Don't cast the return
+ 	value of xmalloc().
+	(arch_specific_hash_add): bitch about duplicates and die on errors
+ 	from put().
+
+	* output.c (output_display): die on non-sequitur of output_display
+ 	finding equal versions.
+
+	* output.c (output_add): Drop libc information.
+	(output_mbs_update): Ditto.
+	(output_display): ditto.
+	* primary.c (process_primary): Ditto.
+
+	* utils.c (determine_libc): Remove.
+	(determine_needsx): new function.  
+	* primary.c (process_primary): call determine_needsx() instead of
+ 	determine_libc().
+
+	* source.c (read_source_packages): bitch on duplicates and die on
+ 	errors from put().
+
+Sat Sep 26 01:22:12 1998  James Troup  <james@nocrew.org>
+
+	* utils.c (skip_line): don't assume the buffer is a properly
+ 	terminated UNIX file and check bounds.
+	(skip_to_next_package): ditto.
+
+Mon Jul 20 16:59:45 1998  James Troup  <james@nocrew.org>
+
+	* output.c (output_display): debug(), not error() and output a
+ 	useful message, not cryptic and meaningless gunk.
+
+	* init.c (parse_opt): New option -o/--source-packages to tell
+ 	quinn diff the name of the Packages-source file.
+	(usage): Mention it.
+
+Sat Jul 18 22:53:03 1998  James Troup  <james@nocrew.org>
+
+	* error.h: Made debug_* sane octal numbers.
+
+	* init.c (parse_opt): Use it.
+	(usage): Note -Dhelp.
+
+	* error.c (debug_help): New.
+
+	* source.c (read_source_packages): Better debug messages.
+
+	* hash.h (VERSION_STR_LENGTH): Increased to 45 to hande gdb debian
+ 	revision.
+
+Tue Jul  7 22:32:27 1998  James Troup  <james@nocrew.org>
+
+	* s/jjtroup@comp.brad.ac.uk/james@nocrew.org/
+
+Tue Jun 23 16:59:50 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* init.c (parse_opt): include config.h and not version.h, and
+ 	VERSION is now a string not a float.
+
+	* version.h: Removed; now defined in configure.in.
+
+	* primary.c (process_primary): Parse the source version if
+ 	present.
+
+	* output.c (output_add): remember source_version.
+	(output_mbs_update): check source_version for mismatches.
+	(output_display): Check the source matches the binary; not useful
+ 	without an exceptions list.
+	(output_display): Use visible warning levels to not display
+ 	suspect packages.
+
+	* main.c (main): initalize visible_warn_level.
+
+	* common.h: new global variable visible_warn_level.
+
+	* init.c (parse_opt): --debug's short form is now -D in line with
+ 	YAWN and dpkg.
+	(parse_opt): New option, -w/--visible-warn.
+	(usage): Ditto.
+
+	* arch_specific.c (is_arch_specific): debug more.
+
+Sat Apr 18 18:10:38 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* output.c (output_display): if the secondary version string is
+ 	empty, the package is "uncompiled", otherwise it's merely
+ 	"out-of-date".
+
+Fri Apr 10 18:43:49 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* output.c (output_retrieve): output_details_realigned should be
+ 	declared #ifdef CPU_BUS_ERRORS_ON_BAD_ALIGNS not output_details.
+
+	* primary.c (process_primary): Correct source lines which have
+ 	more than just the package name in them (e.g. version numbers) by
+ 	truncating the primary->source field at the first space.
+	(process_primary): Don't call want_find, instead test for a null
+ 	primary->source[0] when checking for a source field.
+	(process_primary): Adapt for change in output_add().
+	(process_primary): Handle MBS packages where the name of one of
+ 	the binary packages shares the same name as the source package.
+
+	* output.c (output_add): output_to_hash made static; malloc()ing
+ 	and free()ing a structure every time this function was run is not
+ 	a clever idea.  Function now returns the result of the put() and
+ 	lets the caller deal with it.  This is to handle the situation of
+ 	MBS packages which have a binary package with the source name.
+	(output_display): New output format.  Call
+ 	source_packages_retrieve() to get correct information for section
+ 	and version.
+
+	* main.c (main): Init packages_source_filename and call
+ 	source_packages_create() and source_packages_read().
+
+	* source.c: New file.  Functions for dealing with Packages-source.
+
+	* utils.c (workout_padding): removed as it is now unused.
+
+Thu Apr  9 22:17:47 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* main.c (main): Use new error handling code and new initalization
+ 	code & options.
+
+	* init.c (parse_opt): Add support for --debug, --primary-packages
+ 	--secondary-packages and --arch-specific-packages.  Remove support
+ 	for --warn-missing-lines and --warn-duplicates.  Don't care about
+ 	returning anything.
+	(parse_opt): Crash out on unknown options or any arguments.
+	(usage): Update.  (Ick was still taking about i386 and m68k)
+
+	* primary.c: Use new error handling code.
+	(process_primary): Adapt for corrected name of
+ 	output_mbs_update().
+
+	* output.c: Use new error handling code.
+	(output_add): Update debug output to reflect procedure's new
+ 	names.
+	(output_mbs_update): Correct name of procedure; multi-binary
+ 	source packages not multi-source binary packages.
+	(output_destroy): Don't die on a null output_table.
+
+	* utils.c: Use new error handling code.
+	(get_blah): Don't support obsolete --warn-missing-lines switch.
+	(priority_to_int): Don't die on an unknown priority, just pretend
+ 	it's "-" and bitch about it with debug_warn.
+	(read_file): filename is not altered and can be a const.
+
+	* list.c: Use new error handling code.
+	* xmalloc.c: Ditto.
+	* vercmp.c (compare_versions): Ditto.
+
+	* hash.c: Use new error handling code.
+	(secondary_hash_destroy): Don't die on a null secondary_table.
+
+	* arch_specific.c: Use new error handling code.
+	(arch_specific_hash_add): Don't die on duplicates.
+
+	* error.c (fubar): New procedure; replaces error (FATAL.  Uses
+ 	noreturn and format __attribute__'s; prepends the program name to
+ 	the output.
+	(debug): New procedure; pretty much lifted unaltered from dpkg,
+ 	code and idea.  debug output is control via means of flags set by
+ 	a single octal number passed as a command line option.  The octal
+ 	number is formed by AND-ing together the required debug output.
+	(error): new procedure; like fubar() but non-fatal (doesn't exist,
+ 	doesn't use noreturn) and doesn't support SYSERR flag.
+
+Wed Apr  1 18:18:03 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* primary.c (process_primary): Adapted for basic multi-binary
+ 	source package support (real support as opposed to the previous
+ 	hack).
+
+	* utils.c (priority_to_int): New function.  Used by
+ 	output_msb_update() to help comparison of priorities.
+
+	* output.c (output_retrieve): resurrect this procedure.  libdb has
+ 	an unfortunate habit of returing poorly structs, which causes
+ 	sparc's to bus error.  As a hack, memcpy() the data structure to a
+ 	properly aligned area of memory, unfortunately this doesn't work
+ 	on Solaris due to, afaics, a broken memcpy() implementation, as a
+ 	further hack we use our own memcpy().  Thanks to Roman Hodek
+ 	<Roman.Hodek@informatik.uni-erlangen.de>, Mark Baker
+ 	<mbaker@iee.org> for invaluable help with this.
+	(output_display): Adapt to the new _output_info format, and add
+ 	the CPU_BUS_ERRORS_ON_BAD_ALIGNS hack from output_retrieve.
+	(output_add): Adapt to the new _output_info format, use strcpy not
+ 	strncpy, strlen returns the length not including the terminator,
+ 	use a dynamically allocated struct (not sure why, probably should
+ 	be fixed).
+	(output_msb_update): New function which updates the information of
+ 	a multi-binary source package.
+
+	* output.h (_output_info): needs_x becomes a boolean,
+ 	compare_versions_result an int.  Added new boolean
+ 	multi_binary_source_package, removed obsolete source string.
+ 
+	* output.c: functions renamed, s/output_hash/output/g, since they
+ 	are independent of the method used to store the information.
+	* main.c (main): Adapt to the previous change.
+	* primary.c (process_primary): Ditto.
+
+	* Packages-arch-specific: It's atari-fdisk-cross not
+ 	cross-atari-fdisk.  Added kernel-image-2.0.3{2,3} as everythiong
+ 	but m68k (m68k adds -{atari,amiga,mac} to the name), and
+ 	kernel-headers-2.0.32 (2.0.32 was never released for m68k.
+
+Fri Mar 27 19:57:46 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: added icbs2.0.33, vgacardgames,
+ 	vgagamespack, acidwarp.
+
+Mon Mar 23 14:02:32 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* primary.c (process_primary): Check for an arch_specific package
+ 	earlier to reduce duplication.
+
+	* primary.h: Define a typedef primary_package_info to save on
+ 	typing; struct primary_package_info is renamed to
+ 	_primary_package_info.
+	* hash.c (secondary_hash_retrieve): Adapt to this change.
+	* vercmp.c (compare_versions): Ditto.
+
+	* main.c (main): free the primary and secondary structures.
+
+	* primary.c: New file with process_primary() function which
+ 	contains all the code for processing the primary architecture's
+ 	Packages file, that use to be in main().
+	(process_primary): Call qlist_destroy on want_list.
+	* main.c (main): use process_primary().
+	
+	* output.c (output_hash_add): When needs_x is true, copy " [X]",
+ 	not "[X]\0" ("" is a null terminated string, no need to double
+ 	null terminate it).
+	(output_display): Adjust for the above change.
+	* output.h: Ditto (increase length of static string needs_x).
+
+	* list.c (qlist_destroy): Rewritten so it actually works and
+ 	doesn't imitate a fork bomb.  a) free a copy of the list, so we
+ 	have the previous position in the list to go back to and b) only
+ 	check for temp->next once.
+
+Sun Mar 22 21:30:34 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* utils.c (get_blah): Strip input string from output string before
+ 	return (thus avoiding primary->section+8 etc.).
+	(parse_package): Ditto.
+	* main.c (main): Compensate for this change.
+	* output.c (output_hash_add): Ditto.
+	(output_display): Ditto.
+	* vercmp.c (compare_versions): Ditto.
+	
+	* main.c (main): When we don't know the package name (i.e. when
+ 	trying to determine the secondary's architecture), don't pass the
+ 	package name to get_blah.
+
+Thu Mar 19 15:30:44 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* main.c (main): Pass source to output_hash_add().
+
+	* output.c (output_hash_add): Record source.
+	(output_display): Output source in curly brackets if it exists.
+
+	* main.c (main): Strip "^Package: " from
+ 	{primary,secondary}->name.
+
+	* vercmp.c (compare_versions): Don't compensate for "^Version: "
+ 	anymore.
+	* main.c (main): Ditto.
+	
+	* arch_specific.c (read_arch_specific_packages): Don't compensate
+ 	for "^Architecture: " anymore.
+
+	* utils.c (get_blah): Return line without the search string
+ 	preceeding it.
+	(parse_package): Ditto.
+
+	* main.c (main): Add support for parse_package, and drop the use
+ 	of get_blah for handling the primary's Packages file.
+
+	* utils.c (parse_package): New function; this function supersedes
+ 	get_blah() (nominally, at least), and is as far as I can tell far
+ 	superior to get_blah() for handling the primary's Packages file;
+ 	in a worst case scenario get_blah() would be called 8 times, read
+ 	~20-30 lines each time for each and every one of the 1500+
+ 	Packages.  parse_package() is called once, reads the ~30 lines
+ 	once, and traverses an eight element list 8 times.  parse_package
+ 	differs from get_blah, in that it takes a list of interesting
+ 	lines, and goes through the info for a package once; checking each
+ 	line's interestingness as it goes.  Any interesting lines it
+ 	finds, it passes to the destination string as provided by the list
+ 	(usually the primary struct).  It skips any lines beginning with a
+ 	space (as these will be part of the extended description and thus
+ 	uninteresting).  It remembers which interesting lines it was asked
+ 	to look for it actually found (as a boolean associated with each
+ 	search string in the list).  
+ 
+Wed Mar 18 17:53:00 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Added ultra {ultra, ultra-mod2.0.30,
+ 	ultra-utils}, syslinux, pileup, amiga-fdisk, atari-fdisk,
+ 	setsccserial, atari-bootstrap, cross-atari-fdisk, ldconfig,
+ 	mac-fdisk, libawe0.4, libawe0.4-dev, pcmcia-modules-2.0.33.
+  	Removed nasm, awe-patch, awe-utils, pcmcia-modules-2.0.{29,30},
+ 	pgcc, splay, vkeybd.  In non-free/contrib, added chos,
+ 	distributed-net-proxy, distributed-net, epan, ines, l3,
+ 	libforms0.86, libforms0.88, libglide2, netscape3, netscape4,
+ 	quake2, rvplayer, squake, staroffice3-installer, xacc-smotif,
+ 	xmayday, xquake, xtrkcad.
+
+Sat Mar  7 22:49:33 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* output.c (output_hash_add): Don't die on a duplicate, instead
+ 	print out a warning.
+	(output_hash_add): don't pass bogus SYSERR flag to error on
+ 	failure to add to hash table.
+
+Sun Mar  1 16:42:27 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* vercmp.c: No more {i,m}_version_struct.  Replaced with
+ 	{primary,secondary}_version.
+	(compare_versions): Adapted to use the new secondary package info
+ 	struct.
+
+	* common.h: sec_architecture renamed to secondary_architecture.
+	* arch_specific.c (read_arch_specific_packages): Ditto.
+	* main.c (main): Ditto.
+	* output.c (output_display): Ditto.
+
+	* hash.c (secondary_hash_retrieve): Don't return hash table's
+ 	struct; instead return 0 (failure) or 1 (sucess) and copy the
+ 	relevant details from the hash table's struct to the new secondary
+ 	package info struct.
+
+	* main.c (main): Replaced large number of (ick) static-length
+ 	strings with two structs, one for the primary package info and one
+ 	for the secondary package info.  Results in lots of name changes.
+
+Tue Feb 17 22:59:31 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* quinn4.sh: New script which provides two seperate lists, the
+ 	first being of packages not yet ported, the second of packages
+ 	ported but out of date.  Suggested by Vincent Renardias
+ 	<vincent@waw.com>.
+  
+Sat Dec  6 19:10:51 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Removed mpg123.  Made svatextmode i386
+ 	only.  Corrected name of lincity-svga.  Added gnat (nothing
+ 	inherently i386 specific, it just requires a *serious* amount of
+ 	porting).  Added libwine* (from wine).  Added
+ 	{binutils,gcc}-m68k-linux (not suitable for m68k).  Added aout-*
+ 	and libc4* (only i386 really wants these).  Added vkeybd (from
+ 	awe).  Added optimizer, grub and mkrboot.
+
+Sun Nov 23 22:31:17 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* quinn1.sh: Use ftpget not ncftp.  Fetch compressed Packages
+ 	files.
+
+	* arch_specific.c (read_arch_specific_packages): stop reading into
+ 	the line buffer 2 from the end not 1.  Solaris could handle us
+ 	overflowing the buffer, Linux couldn't.
+
+	* getopt.c: Reverse undocumented change of Nov 13 to prototype of
+ 	getopt.  Without -ansi -pedantic, it breaks.
+  
+	* main.c (main): Make uses of functions provided by
+ 	arch_specific.c.
+
+	* arch_specific.c: New file.  Provides the functions for dealing
+ 	with Packages-arch-specific.
+
+Thu Nov 13 12:47:19 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Makefile.in (CFLAGS): Major increase in the use of -W debug
+ 	flags.
+
+	* configure.in: Check for <string.h>.
+	
+	* getopt.c (my_index): Made a proper function (Non K&R) prototype.
+  	If HAVE_STRING_H is defined, include <string.h> to get the
+ 	prototype of strncmp.
+
+	* main.c (main): Fixed spurious escaping of % in some debug
+ 	messages.
+
+	* error.c (error): The string passed is not altered, so changed to
+ 	const.
+
+Wed Nov 12 22:09:33 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* output.c (output_hash_add): Remember if a package source-depends
+ 	on X.
+	(output_display): Add "[X]" to the end of the output line if a
+ 	package source-depends on X.
+
+	* utils.c (determine_libc): Heuristically check for
+ 	source-dependency on X by looking for xlib6 in the "Suggests:",
+ 	"Recommends:", "Depends:" and "Pre-Depends:" lines.
+
+	* main.c (main): Snarf "Recommends:" and "Suggests:" lines fro the
+ 	primaries Packages file.
+
+Fri Sep 12 23:55:35 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* vercmp.c (compare_versions): Removed hardcoded i386's and
+ 	m68k's.
+
+Sat Sep  6 15:48:37 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* main.c (main): Renamed i* and m* variables to prim* and sec*.
+	(main): Only open and read in the primary's Packages file after
+ 	we've finished with the secondaries, this reduces the run time
+ 	memory requirements of quinn diff by half.
+
+	* utils.c (read_file): Renamed from `open_file' to `read_file',
+ 	since we not only open the file but also read it into the buffer
+ 	too.  Since everything is completely buffered, close the file
+ 	before leaving the function.
+
+	* main.c (main): Free the secondary architectures Packages file
+ 	buffer after we've stored the details from it in the hash table,
+ 	it's 900k of memory we don't need to keep.
+
+	* hash.c: Replaced m68k with secondary throughout.
+
+	* main.c (main): Don't read the secondary's priority and section
+ 	in from the Packages file, we don't use it.
+
+	* hash.c (add_to_hash_table): Don't store the secondary's priority and
+ 	section in the hash table, we don't use it.
+
+	* thor.sh: As with quinn1.sh.
+
+	* quinn3.sh: Ditto.
+
+	* quinn2.sh: Adapt to the new names for the Packages files.
+
+	* quinn1.sh: Adapt to new method of providing two arguments to
+ 	determine primary and secondary architecture and to reflect the
+ 	new names for the Packages files.
+
+	* version.h (VERSION): 0.12
+
+	* utils.c (skip_to_next_package): Add an extra increment to
+ 	buffer_position on exit to skip the blank line package separator.
+  	This was the other part of quinn diff hanging when used with sparc
+ 	as a secondary architecture.
+ 
+	* main.c (main): Replaced bogus !m_architecture test with proper
+ 	one, which was part of the cause of quinn diff hanging when used
+ 	for i386 vs. sparc.
+
+	* version.h (VERSION): 0.11.
+
+Thu Sep  4 19:39:03 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* vercmp.c (compare_versions): Removed all the copying to
+ 	`version_backup' rubbish, since the non-broken parseversion
+ 	doesn't alter the version string.
+	(compare_versions): Added some debug code.
+
+	* common.h: Made debug a global variable.
+
+	* vercmp.c: Uses nfstrsave, fixes sporadic problems with version
+ 	strings disappearing which was making things appear older in the
+ 	primary than the secondary when they really weren't.
+
+	* nfmalloc.c: New file.  Taken from dpkg, has nfstrsave, which is
+ 	needed for parseversion to work properly.
+
+Wed Sep  3 17:58:00 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* main.c (main): When warning when the secondary has a newer
+ 	package than the primary, use the section from the primary and
+ 	also output the priority in accordance with the other messages.
+
+	* version.h (VERSION): Bump to version 0.10 now that we have the
+ 	libc5/6 detection code.
+
+	* utils.c (skip_to_next_package): New routine, used by the code
+ 	which finds the name of the secondary architecture.
+	(determine_libc): New function with the code used to determine
+ 	whether a package is libc5 or libc6 based.
+	(workout_padding): New function with the code used to generate the
+ 	blank/padding strings used to pretty print the output.
+
+	* main.c (main): Add a routine to find the name of the secondary
+ 	architecture.  This gets rid of the hardcoded "has no m68k
+ 	equivalent" problem.
+
+	* utils.c (get_blah): Rewritten.  Now searches all of a Package's
+ 	lines, no more nasty maximum number of lines to search rubbish.
+  	Removed purposeless parameter input_length (uses strlen instead,
+ 	hardcoding the length of the input string is inelegant albeit more
+ 	efficient.  Made the input string constant.
+
+	* main.c (main): Moved a load of stuff out of vercmp and into main. 
+
+Sat Jul  5 20:38:08 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+	
+	* vercmp.c (compare_versions): Minor optimization, by removing
+ 	spurious strcpy of version_backup back to the original string.
+  	Instead simply pass version_backup, so it's that which gets
+ 	altered.
+	(compare_versions): Changed {PRIORITY,SECTION}_LENGTH ->
+ 	MIN_{PRIORITY,SECTION}_LENGTH for clarity.
+
+  	* init.c (parse_opt): Added a check for exactly two arguments, and
+ 	error messages if you have less or more than that.
+
+	* utils.c (get_blah): If we encounter a line consisting of solely
+ 	'\n', assume it's the break between Packages and stop searching.
+  	Made the number of lines searched a #define.
+
+	* main.h (PACKAGE_NAME_LENGTH): Reduced to 400.  Longest line in
+ 	today's Packages file is 248, 400 ought to be adequate.
+
+	* hash.c: Removed malloc()-ing and free()-ing of key->data and
+ 	replaced with a pointer to a fixed length (PACKAGE_NAME_LENGTH)
+ 	string.  This ends the silly situation where I was malloc()-ing
+ 	and free()-ing on every addition or removal from the hash table
+ 	and twice every version compare, and the string I was malloc()-ing
+ 	for was fixed length anyway.
+
+	* hash.c (add_to_hash_table): Only warn about duplicates if global
+ 	variable `warn_duplicates' is set.
+
+	* init.c (usage): program_name is no longer an argument as it is
+ 	now a global variable.
+	(parse_opt): Two new options, long form only, "--warn-duplicates"
+ 	(warns about duplicate packages in the Packages file) and
+ 	"--warn-missing-lines" (warns about missing Section: or Priority:
+ 	etc.).
+	(parse_opt): Don't complain if getopt passes '0' back, it does
+ 	that on long form only options.
+	(parse_opt): No longer pass program_name to usage().
+
+	* main.c: Adapted for the new global variables scheme.
+	(main): program_name is now a global variable and declared outside
+ 	main(), we simply assign argv[0] to it here.
+	(main): No longer pass program_name to open_file().
+
+	* common.h: New file.  Contains global variables, can be included
+ 	by any file which needs them.  The method is a cunning one of
+ 	conditionally #define-ing GLOBAL to mean "extern" in common.h but
+ 	"" in main.c where the variables are initially defined.  Stolen
+ 	straight from tar.
+
+	* hash.c (add_to_hash_table): Only give a warning if there is
+ 	duplicate packages in the Packages file.  Dieing on account of it
+ 	is lame.
+
+	* getopt1.c: Ditto.
+
+	* getopt.h: Ditto.
+
+	* getopt.c: Updated to version in tar 1.12.
+
+	* hash.c (create_hash_table): Use xmalloc().
+	(add_to_hash_table): Ditto.
+	(get_from_hash_table): Ditto.
+	
+	* utils.c (open_file): Use xmalloc().
+
+	* xmalloc.c: New file, stolen from tar.  Provides malloc() with
+ 	error checking, so freeing me of the tedious chore of checking for
+ 	NULL after every call.
+
+Mon May 19 23:02:11 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* utils.c (get_blah): Upgraded to version from Ruari Diff.
+
+	* main.c (main): Removed all traces of {i,m}_version_struct and
+ 	any related malloc()'s or free()'s.  Removed version comparison
+ 	code, it is superseded by compare_versions().
+	(main): Allow for non-existent Section: and/or Priority:.  Adapt
+ 	for new get_blah.
+
+	* vercmp.c: Add {i,m}_version_struct as variables
+ 	with file scope, moved from main.c.
+	(parserversion): New procedure, taken from dpkg, replaces
+ 	version_breakdown().
+	(compare_versions): New procedure, replaces code that was
+ 	previously in main.c.  Adapted to use parseversion() instead of
+ 	version_breakdown().  Changed and improved format of output to
+ 	match ruari diff's.
+
+Thu May 15 16:40:31 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* hash.c (get_from_hash_table): Add missing malloc(), free() pair,
+ 	the strcpy to free()'d memory was causing all sorts of hassle on
+ 	Linux.
+
+Mon Apr 28 22:46:39 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Makefile.in, configure.in, config.h.in: Use autoconf.
+
+	* main.c (main): Adapted to use the hash table.
+
+	* utils.c: New file, with functions removed from main.c and placed
+ 	here instead.
+	(get_blah): Improvements from ruari diff.  Only search 5 lines for
+ 	"blah", issue a warning if one can't be found and return a null
+ 	string.  Reset after the search.
+
+	* hash.c: New file, all the hash table related functions are here.
+	
+	* vercmp.c (version_breakdown): Fixes from ruari diff.  Assume
+ 	version_string passed is a version string with no prefix.
+  	version_string is not altered -> const.  Corrected bug in
+ 	recognition of beginning of version.  Corrected bug in epoch
+ 	recognition compensation.
+
+Sun Mar 23 18:23:16 1997  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* main.c (main): New variables: q (general purpose int),
+ 	{i,m}_version_struct (versionrevision structs), debug (debug
+ 	flag). {i,m}_version -> {i,m}_version_string.
+	(main): Allocate memory for version and revision strings in the
+ 	two versionrevision structs.
+	(main): Removed several debug fprintf's and conditionalised others
+ 	on the status of the debug flag.
+	(main): Added the version checking; simply two calls to
+ 	version_breakdown(), a call to versioncompare() and printf()ing a
+ 	message according to the results.  Only show packages which have a
+ 	newer m68k version if DBG_SHOW_OLDER is set. 
+
+	* vercmp.c: Added this file, which is stolen from dpkg. verrevcmp
+ 	() and versioncompare() are the only procedures used, they are
+ 	unadapted.
+	(version_breakdown): This function takes a Version: line from a
+ 	Packages file and breaks it down for filling a versionrevision
+ 	struct.  The code is *really* nasty, and needs to be tidied up and
+ 	commented.
+

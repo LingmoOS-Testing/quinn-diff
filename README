@@ -1,0 +1,32 @@
+This is the README file for quinn diff version 0.65.
+
+Quinn diff is a program for comparing a Sources file and a Packages
+files to determine which programs need (re)compiled from source for
+any given architecture.
+
+Quinn diff knows about architecture specific packages (e.g. lilo) and
+can easily exlcude them via a Packages-arch-specific file.  The output
+is a list of source packages complete with accurate section and
+version information, suitable for use in build daemons or just in a
+script to auto-snarf the necessary source.
+
+See TODO for an incomplete list of things needing to be done.
+
+See the file NEWS for user-visible changes since the last version.
+
+See the file INSTALL for installation instructions.
+
+Quinn diff has been built and tested on the following platforms :-
+
+Linux/i386 2.4
+Linux/sparc 2.4
+
+Quinn diff is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, a copy of
+which is provided under the name COPYING, or (at your option) any
+later version.
+
+-- 
+James Troup <james@nocrew.org>
+Sun,  8 Jun 2003 14:33:08 +0100

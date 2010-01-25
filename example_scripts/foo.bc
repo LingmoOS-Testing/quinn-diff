@@ -1,0 +1,12 @@
+number_of_packages=read()
+number_unported=read()
+number_out_of_date=read()
+
+scale = 4
+
+percent_ported=100-((number_unported/number_of_packages)*100)
+number_ported=number_of_packages-number_unported
+percent_uptodate=100-((number_out_of_date/number_ported)*100)
+number_uptodate=number_ported-number_out_of_date
+
+print percent_ported," ",number_ported," ",percent_uptodate," ",number_uptodate,"\n"

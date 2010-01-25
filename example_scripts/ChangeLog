@@ -1,0 +1,77 @@
+1999-05-30  James Troup  <james@nocrew.org>
+
+	* snarf_Packages: new scripts; supersedes snarf_Packages-*.
+
+	* create_Packages-source: removed; obsolete.
+
+1998-11-05  James Troup  <james@nocrew.org>
+
+	* create_Packages-source: Use re.compile to speed things up, as
+	suggested by Chris Lawrence <quango@watervalley.net>.
+
+	* junk.sh: It helps to terminate strings.
+
+1998-11-04  James Troup  <james@nocrew.org>
+
+	* junk.sh: Better handling of multiple distributions with
+	differing number of supported architectures.
+
+Sat Oct 17 04:36:27 1998  James Troup  <james@nocrew.org>
+
+	* quinn-diff_split_by_status (ARCH): 
+
+Fri Oct 16 19:28:18 1998  James Troup  <james@nocrew.org>
+
+	* junk.sh: Don't overwrite the old (good) qd-output files if quinn
+ 	diff dies.  Clean up of HTML generation function.  No more `echo
+ 	foo`.
+	
+	* snarf_Packages-source: Remove temporary directory on non-zero
+ 	exits.
+
+	* quinn-diff_sort_by_priority: Add copyright notice.  Change "#!
+  	/bin/bash" to "#! /bin/sh".  Exit on errors.  Use mktemp not
+ 	tempfile and remove the temporary file on non-zero exits.  
+	* quinn-diff_sort_by_section: ditto.  Removed redundant sort.  
+	* quinn-diff_split_by_status: ditto.  Work again [broke with
+ 	removal of libc5/libc6 info].
+
+Sun Jul 19 12:57:24 1998  James Troup  <james@nocrew.org>
+
+	* junk.sh: Support for multiple distributions.
+
+Sat Jul 18 22:56:09 1998  James Troup  <james@nocrew.org>
+
+	* junk.sh: We are not thor.sh.
+
+	* snarf_Packages-source: Rewritten to be less insecure, more
+ 	flexible and suck less.
+
+Tue Jul  7 22:29:09 1998  James Troup  <james@nocrew.org>
+
+	* junk.sh: New.
+
+	* thor.sh: Removed.
+
+Sat Apr 18 18:09:55 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* quinn-diff_split_by_status: quinn4.sh rewritten.  Use
+ 	`tempfile', adapt to support new output format and AUI.  Be more
+ 	intelligent and try and automagically guess the secondary
+ 	architecture.
+
+Sat Apr 11 16:09:38 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* quinn-diff_sort_by_section: quinn3.sh rewritten.  Use
+ 	`tempfile', adapt to support new output format and AUI.
+
+	* quinn-diff_sort_by_priority: quinn2.sh rewritten.  Use
+ 	`tempfile', adapt to support new output format and AUI.
+
+	* snarf_Packages-primary: quinn1.sh rewritten.
+
+	* snarf_Packages-source: quinn1.3.sh rewritten. Use `tempfile' to
+ 	create a temporary file, not /tmp/cajun/$$.  Cleanup temporary
+ 	files on exit.  Write output to Packages-source in the current
+ 	directory.  Create debian_mirror variable and use it.  
+

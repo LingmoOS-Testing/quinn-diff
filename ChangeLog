@@ -1,0 +1,219 @@
+2003-06-08  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+2003-01-30  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+2002-08-19  James Troup  <james@nocrew.org>
+
+	* configure.in (opt_debug): add -O and remove -ggdb3 since that
+	confused valgrind.
+
+2002-08-18  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+2002-01-10  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+2001-12-07  James Troup  <james@nocrew.org>
+
+	* configure.in: default to compiling with -Wall.  Add
+	-Werror-implicit-function-declaration to both debug and non-debug
+	CFLAGS.
+
+	* Packages-arch-specific: sync.
+
+2001-05-20  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+2000-09-01  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+1999-10-16  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: sync.
+
+1999-05-30  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.50.
+
+	* Packages-arch-specific: Added aboot, bincompat, corel-util,
+	dpkg-hurd, egcs64, gnumach, hurd, libffm, mig, powerpc-utils,
+	quik, silo, vmelilo, xserver-xsun-mono, xserver-xsun24,
+	xserver-xsun, xserver-tga and zorroutils.  Removed fbset.  Added
+	kludge entries for kernel-patch-2.0.35-sparc,
+	kernel-patch-2.2.0-sparc, kernel-patch-2.2.1-sparc,
+	kernel-patch-2.2.1-netwinder, kernel-patch-2.2.5-netwindwer,
+	kernel-source-sparc-2.1.125, kernel-source-2.2.1 and mac-fdisk.
+
+1998-12-04  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.46.
+
+	* Packages-arch-specific: Added cqcam as `i386 alpha' on grounds
+	of PC-Hardware orientation.  Bumped Packages-arch-specific-version
+	field to 3 due to use of new `%' prefix.  Made use of '%' prefix.
+	Removed ldso and ldconfig.
+
+1998-12-02  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.45.
+
+	* README: Update.
+
+	* Packages-arch-specific: Added gccchecker, ggi-devel (source
+	package), sml-nj.  Updated the ibcs entries to cover the entire
+	source package.
+
+	* configure.in: check for glib, not libdb.
+	(opt_ccmalloc): new; support for a `--with-ccmalloc' argument to
+	configure.
+	(opt_debug): don't pass -Wtraditional as it produces warnings I
+	can't be bothered to track down with the new hash function and in
+	any event, quinn diff surely won't compile on a non-ANSI compiler
+	anyway.
+
+Tue Oct 27 12:15:48 1998  James Troup  <james@nocrew.org>
+
+	* README.silly-names: New file; explains etymology of Quinn Diff.
+
+Sat Oct 17 04:57:27 1998  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.44.
+
+	* Packages-arch-specific: Added alsa-modules, alsa-modules-2.0.35,
+ 	alsa-source, alsadriver2.0.34, alsalib, alsalib-dev, alsautils,
+ 	unixcw and z8530-utils.  Thanks to Roman Hodek
+ 	<Roman.Hodek@informatik.uni-erlangen.de>.  Added clio, pictures
+ 	and sabre.
+
+Wed Oct 14 12:50:10 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: Added toshiba-hotkey.
+
+Wed Oct  7 09:57:26 1998  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.43
+
+	* configure.in: define AC_CONFIG_AUX_DIR to `scripts' and hide
+ 	configure cruft (mkinstalldirs, missing, install-sh) in there.
+
+	* Makefile.am (dist-hook): find all copies of distfiles and use
+ 	this file to ensure directories containing nothing but scripts,
+ 	etc. are included in the release tar ball.  (Gratuitously stolen
+ 	from gnupg)
+	(SUBDIRS): drop `debian' and `example_scripts' as they are now
+ 	handled by the $dir/distfiles mechanism.
+
+	* Packages-arch-specific: Use the new exclusionary architecture
+ 	field.  Add the version number magic string.
+
+	* configure.in: rewrote electric fence handling macro to be more
+ 	sane.  Explicitly override CFLAGS for debug/optimization flags
+ 	rather than appending to the default "-g -O2".
+
+Tue Oct  6 17:14:06 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: Added gnu-i386-gnu and ultra-mod2.0.35.
+  	Updated ltrace entry.  Updated !m68k entries to include the arm
+ 	architecture.
+
+Thu Oct  1 23:31:11 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: Added bb.
+
+Sun Sep 27 14:58:06 1998  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.42.
+
+	* Packages-arch-specific: Added colrconv, kernel-image-2.0.35,
+ 	kernel-headers-2.0.35, toshiba-fan, morse, pcmcia-modules-2.0.34,
+ 	pcmcia-modules-2.0.35 and xswallow.  Thanks to Roman Hodek
+ 	<Roman.Hodek@informatik.uni-erlangen.de>.  Added cmucl, cil, clue,
+ 	cmucl-cml, cmucl-clx, cmucl-hemlock, series, cmucl-defsystem and
+ 	razzle.
+
+Sat Jul 18 23:07:46 1998  James Troup  <james@nocrew.org>
+
+	* configure.in (VERSION): 0.41.
+
+	* NEWS: Reformatted.
+
+	* configure.in: Add support for --with-includes, --with-efence and
+ 	--with-debug.
+
+Thu Jul  9 18:02:57 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: Added dtlk, wanpipe and dbf2msql.
+  	Thanks to Roman Hodek <Roman.Hodek@informatik.uni-erlangen.de>.
+	Added binutils-dev.
+
+Tue Jul  7 22:26:20 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: fbset works on powerpc too.  ldconfig is
+ 	used by powerpc.  powerpc doesn't want
+ 	kernel-{headers,source}*2.0.3{2,3}.  Thanks to Hartmut Koptein
+ 	<koptein@et-inf.fho-emden.de>.
+  
+Sat Jul  4 21:41:49 1998  James Troup  <james@nocrew.org>
+
+	* Packages-arch-specific: Added kernel-{image,headers}-2.0.34 for
+ 	(!m68k), libc-kheaders for i386-only and kernel-image-2.0.33 for
+ 	(!m68k).  Removed isdnutils.
+
+Mon Jun 29 12:24:36 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Added ftape.
+
+Tue Jun 23 17:15:17 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* configure.in: define VERSION and PACKAGE.
+
+Fri Jun  5 18:49:53 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Added joystick, isdnutils and pciutils.
+
+Tue Jun  2 15:50:56 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Removed adjtimex, aout-binutils,
+ 	aout-gcc, aout-xpm, cqcam, ibcs, ibcs2.0.32, kernel-image-2.0.29,
+ 	kernel-image-2.0.30, l3, libc4, libc4-dev, vic-cqcam.  Added
+ 	vkeybd, jdk1.1-dev, jdk1.1-runtime, libforms-bin, libforms-dev,
+ 	libforms0.86-altdev. isapnptools can apparently be built on alpha
+ 	too. s/i386 binary only/No source/g
+
+Fri May 15 13:44:26 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Exclude binutils on m68k, as 2.9.1 is
+ 	producing broken kernel images and we do not want to upgrade.
+  	Make libregex0* i386 and m68k specific as they are libc5-compat
+ 	packages that only these architectures want.
+
+Mon May  4 17:52:00 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific: Added photopc, qvplay and camediaplay ,
+ 	as they are like qcam (require direct hardware access to the
+ 	parallel port) AFAIK.
+
+Fri May  1 13:14:40 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific (ldso): also exclude powerpc.
+
+Mon Apr 27 13:03:03 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific (sparc-fdisk): only sparc.
+	(sparc-utils): Ditto.
+
+Sun Apr 12 21:33:14 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Packages-arch-specific (ldso): exclude alpha.
+
+Fri Apr 10 18:43:49 1998  James Troup  <jjtroup@comp.brad.ac.uk>
+
+	* Automake-ized and split into shallow directory structure.

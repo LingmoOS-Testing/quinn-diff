@@ -1,0 +1,405 @@
+This is a list of user-visible changes in each released version, more
+detailed changes history can be found in the ChangeLog.
+
+Version 0.64 - 30th January, 2003
+
+* quinn-diff now distinguishes between 'partial' and 'uncompiled'
+  packages; the former being where some binary packages built by a
+  source package are missing but the packages is otherwise up-to-date
+  and the latter meaning that none of a source package's architecture
+  dependent packages have been recompiled for the architecture.
+
+
+Version 0.63 - 20th January, 2003
+
+* Problems with quinn-diff ignoring source packages that bogusly
+  claimed to build binary packages actually built by other source
+  packages have been fixed.
+
+
+Version 0.62 - 19th August, 2002
+
+* The fix for architecture comparison from 0.61 now actually works.
+  Thanks again to ryan Murray <rmurray@debian.org>.
+
+
+Version 0.61 - 18th August, 2002
+
+* Architecture comparison has been fixed so that, e.g. mips is
+  correctly differentiated from mipsel.  Thanks to Ryan Murray
+  <rmurray@debian.org> for the patch.
+
+
+Version 0.60 - 10th January, 2001
+
+* Take the Architecture: field into consideration and ignore packages
+  that are not Architecture: all or the architecture we're interested
+  in.
+
+
+Version 0.59 - 18th December, 2001
+
+* Fixed a bug in the Packages-arch-specific handling that was causing
+  some packages to be incorrectly marked as architecture specific.
+
+
+
+Vesrion 0.57 - 7th December, 2001
+
+* Fixed quinn-diff to support a zero-length or almost-empty Packages file.
+
+* Support a -i/--ignore-arch-all flag to ignore source packages which
+  are marked as 'Architecture: all'.
+
+
+
+Vesrion 0.56 - 25th May, 2001
+
+* Fixed the compiled/out-of-date markers so that they reflect reality
+  a little better.
+
+
+Version 0.55 - 24th May, 2001
+
+* Fixed a 'free-ing memory twice' crash.
+
+
+Version 0.54 - 20th May, 2001
+
+* Support -A/--architecture to override the automagic determination of
+  architecture of Packages file.
+
+* Handle duplicates in both Packages and Sources by comparing version
+  numbers and discarding the older copy.
+
+
+Version 0.53 - 1st September, 2000
+
+* Fix a long-standing bug that was causing the section and priority to
+  disappear from the output for random packages.
+
+* A crash on Packages files with nothing but 'Architecture: all'
+  packages has been fixed.
+
+* The new Sources and Packages files produced by apt-ftparchive are
+  now handled.
+
+
+Version 0.50 - 30th May, 1999
+
+* Rewrite.  Quinn Diff now compares a Packages file and a Sources
+  file, i.e. it compares any given architecture to the source not to
+  some other architecture.  This gets us away from the broken model of
+  a primary and secondary architecture, which wasn't always true.  It
+  also allows one to run quinn diff for the i386 ``port''.
+
+* Packages marked as hurd-i386 specific in Packages-arch-specific are
+  now correctly noted as such.
+
+* There is now a man page.
+
+* Packages-arch-specific is now installed into /etc/ and Quinn Diff
+  looks for it there.
+
+
+Version 0.46 - 4th December, 1998
+
+* The Packages-arch-specific file can now be used to mark entire
+  source packages as architecture specific by use of a '%' prefix.
+
+
+Version 0.45 - 2nd December, 1998
+
+* create_Packages-source has been sped up more.
+
+* Quinn Diff was broken by recent Packages files which has gnome-*
+  packages with Depends lines in excess of 400 characters; sick of
+  hardcoded limits in quinn diff, I've removed them all.
+
+* Quinn Diff now uses GTK+'s glib library for hash functions rather
+  than libdb.  libdb was overkill and the version from glibc 2.1
+  didn't work with quinn diff.  glib's hash functions are more light
+  weight and better suited to what quinn diff is doing and switching
+  to it fixed several previously unresolveable problems with the new
+  use of dynamically allocated memory for all strings related to
+  input.
+
+* Quinn Diff now uses less memory after the plugging of some memory
+  leaks and more intelligent freeing of buffers.
+
+* A bug in code that tried to handle broken Packages-sources file has
+  been fixed so it won't output epochs as part of a source package
+  version number.
+
+
+Version 0.44 - 17th October, 1998
+
+* A stupid bug which was causing problems (alphabetically early
+  Architecture: all packages were being erroneously listed as
+  uncompiled) on underpopulated architectures (e.g. hurd-i386) has
+  been fixed.
+
+* The example scripts have been improved in small ways and fixed in
+  some cases (quinn-diff_split_by_status has been broken since 0.41).
+
+
+Version 0.43 - 7th October, 1998
+
+* Quinn Diff will now die on duplicates in the Packages-source file as
+  this invariable represents a mirror in a bad way and Quinn Diff's
+  output will be compromised.
+
+* A heuristic designed to help spot bad mirrors, which was actually
+  causing information lossage in rare cases, has been disabled.
+
+* Quinn Diff now checks for a version string in the first line of
+  Packages-arch-specific; if it finds a version newer than it can
+  parse, it will refuse to even try.
+
+* Quinn Diff now supports exclusionary architecture fields in the
+  Packages-arch-specific-file, e.g. "!m68k" means that the package is
+  suitable for all architectures _except_ m68k.
+
+
+Version 0.42 - 27th September, 1998
+
+* Quinn Diff now accepts a -o/--source-packages option for specifiying
+  an alternate name for Packages-source.
+
+* A spurious debugging error() call which was left in by mistake has
+  been removed.
+
+* Quinn diff will no longer crash on malformed Packages-* files.
+
+* snarf_Packages-source has been supplemented by a python script to
+  replace the spawning of several thousands seds, speeding it up by
+  some 26 times or more.
+
+* Quinn diff will now complain loudly about duplicates in the
+  Packages-source file and die on libdb-related errors.
+
+* Quinn diff no longer tries to guess if the package is libc5 or libc6
+  based as this information was only useful during the libc5 -> libc6
+  conversion process hamm underwent.
+
+
+Version 0.41 - 18th July, 1998
+
+* Quinn diff now handles the long version strings like
+  "4.17-4.m68k.objc.threads.hwwp.fpu.gnat" found in slink.
+
+* The snarf_Packages-source script has been rewritten to be less
+  insecure, more flexible and suck less.
+
+* The configure script now supports --with-includes, --with-efence and
+  --with-debug.
+
+* The -D/--debug option accepts "help" as an argument and displays
+  help information on receiving it.
+
+
+Version 0.40 - 23rd June, 1998
+
+* --debug's short form is now -D in line with YAWN (see
+ http://yawn.nocrew.org) and dpkg.
+
+* There is a new option -w/--visible-warn, which controls which
+  category of suspect packages are shown.  Currently only packages
+  where the source version numbers mismatch are considered suspect.
+
+
+Version 0.31 - 18th April, 1998
+
+* Most of the example scripts have been updated so that they work again.
+
+* Quinn Diff will now print "uncompiled" or "out-of-date" for each
+  package depending on whether or not the package has ever been
+  compiled on the secondary architecture before or not.
+
+
+Version 0.30 - 10th April, 1998
+
+* The --warn-missing-lines and --warn-duplicates command line switches
+  no longer exist.  --warn-missing-lines is now implemented in a more
+  sane fashion with checks for existence only done on relevant lines,
+  and --warn-duplicates is now enabled through the new --debug switch.
+
+* Quinn Diff will no longer die on duplicate packages in the
+  Packages-arch-specific file, it'll will (silently or not, as --debug
+  dictates) ignore the duplicates.
+
+* Quinn Diff's command line interface has changed.  It's no longer
+  necessary (or even possible) to specify the two Packages files as
+  arguments, instead there are 3 new command line options:
+ 
+ -a --arch-specific-packages  filename of Packages-arch-specific file.
+                               default: Packages-arch-specific in cwd
+ -p --primary-packages        filename of primary architectures Packages file.
+                               default: Packages-primary in cwd
+ -s --secondary-packages      filename of secondary architectures Packages file.
+                               default: Packages-secondary in cwd
+
+* Quinn Diff now correctly exits with an error message when passed an
+  unrecognised command line option.
+
+* Quinn Diff now requires a new file Packages-sources, this file lists
+  the section and version number of every source package.  There is a
+  script (quinn1.3.sh) as a (poor) example of how to generate a
+  Packages-sources file.
+
+* Quinn Diff has a new output format:
+
+  [optional]   oldlibs/        pam: 0.57b-0.2 is newer than 0.57b-0. [libc6]
+
+ becomes
+
+  libs/pam_0.57b-0.2.dsc [optional:libc6]
+
+* The section and version are now correct for the source package,
+  courtesy of Packages-sources.
+
+
+Version 0.20 - 9th April, 1998
+
+* Quinn Diff now knows about multi-binary source packages, and lists
+  them instead of listing several individual binary packages as if
+  they bore no relation to each other.  Before MBS-recognition:
+
+   [optional]   admin/          libpam0g-util has not been compiled for m68k. [libc6] 
+   [optional]   devel/          libpam0g-dbg: 0.57b-0.2 is newer than 0.57b-0. [neither] 
+   [optional]   devel/          libpam0g-dev: 0.57b-0.2 is newer than 0.57b-0. [neither] 
+   [optional]   libs/           libpam0g: 0.57b-0.2 is newer than 0.57b-0. [libc6] 
+   [optional]   oldlibs/        libpam0-altdev: 0.57b-0.2 is newer than 0.57b-0. [neither] 
+   [optional]   oldlibs/        libpam0-altutil: 0.57b-0.2 is newer than 0.57b-0. [libc5] 
+   [optional]   oldlibs/        libpam0: 0.57b-0.2 is newer than 0.57b-0. [libc5] 
+
+  After MBS-recognition:
+
+   [optional]   oldlibs/        pam: 0.57b-0.2 is newer than 0.57b-0. [libc6]
+
+  This still needs some work (e.g. section and version are wrong), but
+  it is a big step forward.
+
+* A new example script is provided, called quinn4.sh, which splits
+  quinn diff output into two parts: unported packages and out-of-date
+  packages.
+
+* Lots of updates to Packages-arch-specific have been made.
+
+* A bug was fixed where two packages on one architecture with the same
+  name would kill quinn diff.
+
+
+Version 0.13 - 24th November, 1997
+
+* There is now a Packages-arch-specific file, which lists binary
+  packages which are specific to an architecture.  As a result, any
+  packages which aren't compilable on the secondary architecture won't
+  be listed in quinn diff's output.
+
+* quinn1.sh now uses ftpget (it's free and is from the excellent lftp
+  package) and gets a compressed packages file.
+
+* Quinn Diff now tells you if a package is depends, suggests or
+  recommends xlib6*.  This is a useful indication of whether or not a
+  package requires X11 to build.
+
+
+Version 0.12 - 6th September, 1997
+
+* If the Packages file of the secondary had an Architecture: all
+  package as it's first package, quinn diff would hang.  Fixed.
+
+
+Version 0.11 - 4th September, 1997
+
+* A nasty bug in parseversion was causing packages to erroneously be
+  marked as older on the primary than the secondary when they really
+  weren't.
+
+* If --warn-older was used, the output wasn't the same as the output
+  for warnings about qpackages out of date on the secondary
+  architecture.
+
+
+Version 0.10 - 15th October, 1997
+
+* Quinn Diff now tells you if a package is libc5 based or libc6 based
+  on the primary architecture.
+
+* Quinn diff now gets the architecture string for "has not been
+  compiled on m68k" from the Packages file, a major step away from
+  user-level i386 vs. m68k hardcoded-ness.
+
+
+Version 0.02 - 4th July, 1997
+
+* New output format a la ruari-diff.
+
+
+Version 0.01 
+
+* Ruari diff now outputs something sensible when it encounters
+  packages without a priority or a section.
+
+* The output is now padded, to look nicer.
+
+* ruari.sh is now known as ruari1.sh and is much easier to customize.
+
+* ruari2.sh is a new script to sort the output according to priority.
+
+
+Version pre-0.00 
+
+* Store the Packages-secondary in a hash table, speed increase is impressive.
+
+  This is the results of time --verbose, on what was IIRC a fast i486
+  machine.  The second one is quinn-diff, the Mary Wana edition.
+
+	Command being timed: "./quinn-diff Packages-i386 Packages-m68k"
+	User time (seconds): 299.12
+	System time (seconds): 0.85
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:02.60
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 0
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 381
+	Minor (reclaiming a frame) page faults: 337
+	Voluntary context switches: 0
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+	Command being timed: "./quinn-diff Packages-i386 Packages-m68k"
+	User time (seconds): 1.72
+	System time (seconds): 0.66
+	Percent of CPU this job got: 95%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.49
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 0
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 387
+	Minor (reclaiming a frame) page faults: 460
+	Voluntary context switches: 0
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
