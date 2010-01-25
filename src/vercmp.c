@@ -51,11 +51,11 @@ const char *parseversion(struct versionrevision *rversion, const char *string);
 		: cisalpha((x)) ? (x) \
 		: (x) + 256)
 
-int cisdigit(int c) {
+static int cisdigit(int c) {
 	return (c>='0') && (c<='9');
 }
 
-int cisalpha(int c) {
+static int cisalpha(int c) {
 	return ((c>='a') && (c<='z')) || ((c>='A') && (c<='Z'));
 }
 
