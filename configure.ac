@@ -73,12 +73,11 @@ x/*|x.*)
 esac
 
 dnl Checks for libraries.
-dnl AC_CHECK_LIB(glib, g_hash_table_lookup)
 AM_PATH_GLIB_2_0()
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(fcntl.h limits.h unistd.h)
+AC_CHECK_HEADERS(fcntl.h limits.h unistd.h getopt.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -86,7 +85,7 @@ AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(strerror strstr strtol strtoul)
+AC_CHECK_FUNCS(strerror strstr strtol strtoul getopt_long)
 
 dnl Check for whether GCC's debug flags are wanted
 opt_debug=no
