@@ -3,12 +3,12 @@ Section: devel
 Priority: extra
 Maintainer: Debian wanna-build maintainers <debian-wb-team@lists.debian.org>
 Uploaders: Philipp Kern <pkern@debian.org>
-Build-Depends: libglib2.0-dev, docbook-utils
-Standards-Version: 3.8.0
+Build-Depends: debhelper (>> 7.0.0), libglib2.0-dev, docbook-utils
+Standards-Version: 3.8.3
 
 Package: quinn-diff
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: lftp, debianutils (>= 1.7)
 Description: Compares a Packages files and a Sources file
  This is a program to compare a Packages files and a Sources file
