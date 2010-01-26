@@ -8,6 +8,6 @@ all: $(MANPAGES)
 %: %.sgml
 	docbook2man $< > /dev/null
 
-clean:
+clean-local:
 	rm -f $(MANPAGES) manpage.lings manpage.log manpage.refs
 
