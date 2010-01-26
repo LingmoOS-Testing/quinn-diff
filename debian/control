@@ -9,7 +9,7 @@ Standards-Version: 3.8.3
 Package: quinn-diff
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: lftp, debianutils (>= 1.7)
+Suggests: lftp
 Description: Compares a Packages files and a Sources file
  This is a program to compare a Packages files and a Sources file
  to see which programs need (re)compiling for any given architecture.
