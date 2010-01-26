@@ -1,7 +1,8 @@
 Source: quinn-diff
 Section: devel
 Priority: extra
-Maintainer: Luk Claes <luk@debian.org>
+Maintainer: Debian wanna-build maintainers <debian-wb-team@lists.debian.org>
+Uploaders: Philipp Kern <pkern@debian.org>
 Build-Depends: libglib2.0-dev, docbook-utils
 Standards-Version: 3.8.0
 
