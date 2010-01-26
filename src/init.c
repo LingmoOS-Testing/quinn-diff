@@ -106,7 +106,7 @@ parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages
 	  break;
 
 	case 'V':
-	  fprintf (stderr, "Quinn diff version %s\n", VERSION);
+	  printf ("Quinn diff version %s\n", VERSION);
 	  exit (0);
 	  break;
 
