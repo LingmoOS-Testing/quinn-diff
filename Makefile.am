@@ -14,7 +14,7 @@ dist-hook:
 	done
 
 ChangeLog:
-	git log > ChangeLog
+	git log --date=short --pretty="format:%cd  %aN%n%n%s%n%n%b%n" > ChangeLog
 
 .PHONY: ChangeLog
 
