@@ -1,6 +1,12 @@
 This is a list of user-visible changes in each released version, more
 detailed changes history can be found in the ChangeLog.
 
+Version 0.70 - 26th January, 2010
+
+* Handle the new arch:all handling of dpkg correctly when using
+  `--ignore-arch-all'.
+
+
 Version 0.64 - 30th January, 2003
 
 * quinn-diff now distinguishes between 'partial' and 'uncompiled'
