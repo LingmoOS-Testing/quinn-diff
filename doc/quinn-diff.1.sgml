@@ -72,7 +72,7 @@
       <varlistentry>
 	<term><option>-i/--ignore-arch-all</option></term>
 	<listitem>
-	  <para>If this option is enabled <command>quinn-diff</command> will ignore source packages which are marked as '<literal>Architecture: all</literal>'.</para>
+	  <para>If this option is enabled <command>quinn-diff</command> will ignore source packages which contain <literal>all</literal> in their architecture list, but not the current architecture.</para>
 	</listitem>
       </varlistentry>
 
