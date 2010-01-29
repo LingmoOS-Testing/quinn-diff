@@ -1,4 +1,4 @@
-EXTRA_DIST = Packages-arch-specific
+EXTRA_DIST = Packages-arch-specific ChangeLog
 sysconf_DATA = Packages-arch-specific
 SUBDIRS = doc src
 
