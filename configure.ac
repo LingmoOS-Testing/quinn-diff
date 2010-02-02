@@ -73,5 +73,5 @@ dnl Checks for library functions.
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(strerror strstr strtol strtoul getopt_long)
 
-AC_OUTPUT([Makefile doc/Makefile src/Makefile])
+AC_OUTPUT([Makefile doc/Makefile src/Makefile example_scripts/Makefile])
 

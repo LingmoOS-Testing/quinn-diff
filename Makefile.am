@@ -1,6 +1,6 @@
 EXTRA_DIST = Packages-arch-specific
 sysconf_DATA = Packages-arch-specific
-SUBDIRS = doc src
+SUBDIRS = doc src example_scripts
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \
