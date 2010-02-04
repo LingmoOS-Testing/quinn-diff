@@ -1,7 +1,0 @@
-example_scripts/junk.sh
-example_scripts/quinn-diff_sort_by_priority
-example_scripts/quinn-diff_sort_by_section
-example_scripts/quinn-diff_split_by_status
-example_scripts/snarf_Packages-primary
-example_scripts/snarf_Packages-secondary
-example_scripts/snarf_Packages-source
