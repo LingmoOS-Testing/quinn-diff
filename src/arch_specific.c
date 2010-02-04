@@ -186,6 +186,17 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
       package_name[k] ='\0';
       debug(debug_as, "package name is \"%s\"", package_name);
 
+      /* Empty line encountered */
+      if(strlen(package_name) == 0)
+      {
+        free(line);
+        free(package_name);
+        continue;
+      }
+
+      /* Skip over the : separator */
+      l++;
+
       /* Architectures is everything after that (excluding comments) */
 
       k = 0;
