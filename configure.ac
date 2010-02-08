@@ -68,6 +68,7 @@ AC_CHECK_HEADERS(fcntl.h limits.h unistd.h getopt.h)
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
+CC_FUNC_EXPECT
 
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
