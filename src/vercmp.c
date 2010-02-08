@@ -27,7 +27,6 @@
 #include <string.h>
 #include "common.h"
 #include "error.h"
-#include "xmalloc.h"
 #include "nfmalloc.h"
 #include "vercmp.h"
 

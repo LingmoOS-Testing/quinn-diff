@@ -18,9 +18,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 #include "error.h"
 #include "list.h"
-#include "xmalloc.h"
 
 /****** Non-Generic *********/
 
@@ -30,7 +30,7 @@ want_append(Qlist *list, want_node *data)
 
   want_node *new_data;
   
-  new_data = xmalloc (sizeof(want_node));
+  new_data = (want_node*) g_malloc (sizeof(want_node));
   *new_data = *data;
   return (qlist_append (list, new_data));
 
@@ -75,7 +75,7 @@ qlist_append(Qlist *list, void *data)
   Qlist *new_list;
   Qlist *end_of_list;
   
-  new_list = xmalloc (sizeof(Qlist));
+  new_list = (Qlist*) g_malloc (sizeof(Qlist));
   new_list->data = data;
   new_list->next = NULL;
 
@@ -98,7 +98,7 @@ qlist_destroy(Qlist *list)
   if (temp->next)
     qlist_destroy (temp->next);
       
-  xfree (temp);
+  g_free (temp);
 
 }
 

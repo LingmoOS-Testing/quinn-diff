@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "xmalloc.h"
+#include <glib.h>
 #include "nfmalloc.h"
 
 
@@ -45,7 +45,7 @@ void nffreeall(void) {
 
 static void *nfmalloc_sysmalloc(size_t size) {
   struct piece *alc;
-  alc= xmalloc(size + sizeof(struct piece));
+  alc= g_malloc(size + sizeof(struct piece));
   alc->next= pieces; pieces= alc;
   return &alc->space;
 }

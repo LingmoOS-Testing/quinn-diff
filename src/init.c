@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 #include "config.h"
 #include "error.h"
 #include "getopt.h"
@@ -27,7 +28,6 @@
 #include "parse_packages.h"
 #include "parse_sources.h"
 #include "utils.h"
-#include "xmalloc.h"
 
 void
 parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages)
@@ -60,12 +60,12 @@ parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages
       switch (c)
 	{
 	case 'a':
-	  xfree_if_non_null (packages_arch_specific_filename);
+	  g_free (packages_arch_specific_filename);
 	  packages_arch_specific_filename = xstrdup (optarg);
 	  break;
 
 	case 'A':
-	  xfree_if_non_null (packages_architecture);
+	  g_free (packages_architecture);
 	  packages_architecture = xstrdup (optarg);
 	  break;
 
@@ -92,12 +92,12 @@ parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages
 	  break;
 
 	case 'p':
-	  xfree_if_non_null (packages->file_name);
+	  g_free (packages->file_name);
 	  packages->file_name = xstrdup (optarg);
 	  break;
 
 	case 's':
-	  xfree_if_non_null (sources->file_name);
+	  g_free (sources->file_name);
 	  sources->file_name = xstrdup (optarg);
 	  break;
 

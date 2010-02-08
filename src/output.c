@@ -25,7 +25,6 @@
 #include "output.h"
 #include "parse_sources.h"
 #include "utils.h"
-#include "xmalloc.h"
 #include "vercmp.h"
 
 GHashTable *output_hash_table;
@@ -124,7 +123,7 @@ output_ht_add (const sources_info *source, const char *binary_version,
 
   /* Set up the output_info node for this package */
 
-  package_to_add = xmalloc (sizeof(output_info));
+  package_to_add = g_malloc (sizeof(output_info));
   package_to_add->name = xstrdup (source->name);
   package_to_add->source_version = xstrdup (source->version);
   if (binary_version)
@@ -211,12 +210,12 @@ output_ht_remove (const char *key)
   if (!package)
     return FALSE;
 
-  xfree (package->name);
-  xfree (package->source_version);
-  xfree_if_non_null (package->binary_version);
-  xfree (package->priority);
-  xfree (package->section);
-  xfree (package);
+  g_free (package->name);
+  g_free (package->source_version);
+  g_free (package->binary_version);
+  g_free (package->priority);
+  g_free (package->section);
+  g_free (package);
   g_hash_table_remove (output_hash_table, key);
 
   return TRUE;
@@ -239,13 +238,13 @@ output_free_ht_entry (gpointer key __attribute__ ((unused)),
 		      gpointer cruft __attribute__ ((unused)))
 {
 
-  xfree (key);
-  xfree (((output_info *) package)->name);
-  xfree (((output_info *) package)->source_version);
-  xfree_if_non_null (((output_info *) package)->binary_version);
-  xfree (((output_info *) package)->priority);
-  xfree (((output_info *) package)->section);
-  xfree (package);
+  g_free (key);
+  g_free (((output_info *) package)->name);
+  g_free (((output_info *) package)->source_version);
+  g_free (((output_info *) package)->binary_version);
+  g_free (((output_info *) package)->priority);
+  g_free (((output_info *) package)->section);
+  g_free (package);
 
 }
 

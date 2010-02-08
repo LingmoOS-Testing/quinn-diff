@@ -24,7 +24,6 @@
 #include "error.h"
 #include "parse_packages.h"
 #include "utils.h"
-#include "xmalloc.h"
 #include "vercmp.h"
 
 GHashTable *packages_hash_table;
@@ -44,7 +43,7 @@ determine_packages_architecture (packages_info *packages)
 
 	  if (packages_architecture && strstr (packages_architecture, "all") != NULL)
 	    {
-	      xfree (packages_architecture);
+	      g_free (packages_architecture);
 	      packages_architecture = NULL;
 	    }
 
@@ -73,7 +72,7 @@ process_packages (packages_info *packages)
   int i;
 
   want_list = NULL;
-  want_data = xmalloc (sizeof(*want_data));
+  want_data = g_malloc (sizeof(*want_data));
   strcpy (want_data->search_string, "Package: ");
   want_data->destination_string = &packages->name;
   want_list = want_append (want_list, want_data);
@@ -121,8 +120,8 @@ process_packages (packages_info *packages)
 	      i = 0;
 	      while (*(source_version+i) != '\0' && *(source_version+i) != ')')
 		i++;
-	      xfree (packages->version);
-	      packages->version = xmalloc (i+1);
+	      g_free (packages->version);
+	      packages->version = g_malloc (i+1);
 	      strncpy (packages->version, source_version, i);
 	      packages->version[i] = '\0';
 	      debug (debug_packages, "naima: after [%s] %s", packages->name, packages->version);
@@ -142,9 +141,9 @@ process_packages (packages_info *packages)
       else
 	packages_ht_add (packages->name, packages->version, packages->source, packages->architecture);
 
-      xfree (packages->version);
-      xfree_if_non_null (packages->source);
-      xfree (packages->name);
+      g_free (packages->version);
+      g_free (packages->source);
+      g_free (packages->name);
 
     }
 
@@ -173,7 +172,7 @@ packages_ht_add (const char *package, const char *version, const char *source, c
   debug(debug_packages, "packages_ht_add: %s_%s (%s) to Packages hash table", package, version, source);
 
   key = xstrdup (package);
-  data = xmalloc (sizeof(packages_ht_info));
+  data = g_malloc (sizeof(packages_ht_info));
   data->version = xstrdup(version);
   if (source)
     data->source = xstrdup(source);
@@ -212,10 +211,10 @@ packages_free_ht_entry (gpointer key,
 			gpointer cruft __attribute__ ((unused)))
 {
 
-  xfree (key);
-  xfree_if_non_null (((packages_ht_info *) data)->source);
-  xfree (((packages_ht_info *) data)->version);
-  xfree (((packages_ht_info *) data)->architecture);
-  xfree (data);
+  g_free (key);
+  g_free (((packages_ht_info *) data)->source);
+  g_free (((packages_ht_info *) data)->version);
+  g_free (((packages_ht_info *) data)->architecture);
+  g_free (data);
 
 }

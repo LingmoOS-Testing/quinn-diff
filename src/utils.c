@@ -23,7 +23,6 @@
 #include "error.h"
 #include "list.h"
 #include "utils.h"
-#include "xmalloc.h"
 
 /* Two common functions used by all the hash tables */
 
@@ -83,7 +82,7 @@ parse_package (const char *buffer, long buffer_position, const int buffer_length
       ((want_node *)(want_list_pointer->data))->found = FALSE;
       if (*((want_node *) want_list_pointer->data)->destination_string)
 	{
-	  xfree (*((want_node *) want_list_pointer->data)->destination_string);
+	  g_free (*((want_node *) want_list_pointer->data)->destination_string);
 	  *((want_node *) want_list_pointer->data)->destination_string = NULL;
 	}
       want_list_pointer = want_list_pointer->next;
@@ -129,7 +128,7 @@ parse_package (const char *buffer, long buffer_position, const int buffer_length
 	  want_list_pointer = want_list_pointer->next;
 	}
 
-      xfree (line);
+      g_free (line);
     }
 
   buffer_position++;
@@ -170,7 +169,7 @@ get_field (const char *buffer, const long buffer_length, long buffer_position,
 	    }
 	  else
 	    {
-	      xfree (field);
+	      g_free (field);
 	      field = NULL;
 	    }
 	}
@@ -214,14 +213,14 @@ read_line (const char *buffer, const long buffer_length, long *counter)
   int max_length = 256;
   char *line;
 
-  line = xmalloc (max_length);
+  line = g_malloc (max_length);
 
   while (*counter < buffer_length && buffer[*counter] != '\n')
     {
       if (i == max_length - 1)
 	{
 	  max_length *= 2;
-	  line = xrealloc (line, max_length);
+	  line = g_realloc (line, max_length);
 	}
       line[i++] = buffer[(*counter)++];
 
@@ -257,7 +256,7 @@ void read_file (const char *filename, FILE *fp, char **buffer_p, long *file_leng
       /* We don't do any memory management, we just ask for a chunk of
        * memory the size of the file */
 
-      *buffer_p = (char *) xmalloc (*file_length);
+      *buffer_p = (char *) g_malloc (*file_length);
 
       /* RUARI QUINN this is ignoring the possibility that ftell could be long */
       n_read = fread (*buffer_p, sizeof (char), *file_length, fp);

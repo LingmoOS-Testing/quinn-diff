@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 #include "arch_specific.h"
 #include "error.h"
 #include "init.h"
@@ -26,7 +27,6 @@
 #include "parse_sources.h"
 #include "parse_packages.h"
 #include "utils.h"
-#include "xmalloc.h"
 
 /* The following causes "common.h" to produce definitions of all the global
    variables, rather than just "extern" declarations of them. */
@@ -40,7 +40,7 @@ main (int argc, char **argv)
   sources_info *sources;
   packages_info *packages;
 
-  sources = xmalloc (sizeof(*sources));
+  sources = g_malloc (sizeof(*sources));
   sources->name = NULL;
   sources->section = NULL;
   sources->priority = NULL;
@@ -48,7 +48,7 @@ main (int argc, char **argv)
   sources->binary = NULL;
   sources->architecture = NULL;
   sources->binaries = NULL;
-  packages = xmalloc (sizeof(*packages));
+  packages = g_malloc (sizeof(*packages));
   packages->name = NULL;
   packages->version = NULL;
   packages->source = NULL;
@@ -79,7 +79,7 @@ main (int argc, char **argv)
   read_file (packages->file_name, packages->file_pointer, &packages->buffer, &packages->file_length);
   determine_packages_architecture (packages);
   process_packages (packages);
-  xfree (packages->buffer);
+  g_free (packages->buffer);
 
   /* Read and process Packages-arch-specific */
 
@@ -99,10 +99,10 @@ main (int argc, char **argv)
   packages_ht_destroy ();
   arch_specific_packages_ht_destroy ();
   output_ht_destroy ();
-  xfree (sources->buffer);
-  xfree (sources);
-  xfree (packages);
-  xfree (packages_architecture);
+  g_free (sources->buffer);
+  g_free (sources);
+  g_free (packages);
+  g_free (packages_architecture);
 
   return (0);
 

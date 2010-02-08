@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 #include "arch_specific.h"
 #include "error.h"
 #include "globals.h"
@@ -27,7 +28,6 @@
 #include "parse_sources.h"
 #include "utils.h"
 #include "vercmp.h"
-#include "xmalloc.h"
 
 void free_binaries (Qlist **list);
 
@@ -46,7 +46,7 @@ parse_sources (sources_info *source)
      Packages file as we go. */
 
   want_list = NULL;
-  want_data = xmalloc (sizeof(*want_data));
+  want_data = g_malloc (sizeof(*want_data));
   strcpy (want_data->search_string, "Package: ");
   want_data->destination_string = &source->name;
   want_list = want_append (want_list, want_data);
@@ -74,13 +74,13 @@ parse_sources (sources_info *source)
 
       /* Check the entire source package is not excluded */
 
-      prefixed_source_name = xmalloc (strlen (source->name) + 2);
+      prefixed_source_name = g_malloc (strlen (source->name) + 2);
       sprintf (prefixed_source_name, "%%%s", source->name);
       q = is_arch_specific (prefixed_source_name);
-      xfree (prefixed_source_name);
+      g_free (prefixed_source_name);
       if (q)
 	{
-	  xfree (source->name);
+	  g_free (source->name);
 	  continue;
 	}
 
@@ -107,10 +107,10 @@ parse_sources (sources_info *source)
       debug(debug_sources, "parse_sources: priority = %s, section = %s, version = %s, binary = %s",
 	    source->priority, source->section, source->version, source->binary);
 
-      xfree_if_non_null (source->binaries);
+      g_free (source->binaries);
       if (!strchr(source->binary,','))
 	{
-	  /* We do this so we can consistently xfree the list's data nodes */
+	  /* We do this so we can consistently free the list's data nodes */
 	  binary = xstrdup (source->binary);
 	  source->binaries = qlist_append (source->binaries, binary);
 	}
@@ -134,7 +134,7 @@ parse_sources (sources_info *source)
 		{
 		  if (source->binary[l] == ' ')
 		    l++;
-		  binary = xmalloc (j-l+1);
+		  binary = g_malloc (j-l+1);
 		  strncpy (binary, source->binary+l, j-l);
 		  binary[j-l] = '\0';
 		  source->binaries = qlist_append (source->binaries, binary);
@@ -212,10 +212,10 @@ free_binaries (Qlist **list)
 
   do
     {
-      xfree_if_non_null ((*list)->data);
+      g_free ((*list)->data);
       previous = *list;
       *list = (*list)->next;
-      xfree (previous);
+      g_free (previous);
     } while (*list);
 
 }

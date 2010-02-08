@@ -23,7 +23,6 @@
 #include "globals.h"
 #include "error.h"
 #include "utils.h"
-#include "xmalloc.h"
 #include "arch_specific.h"
 
 /* Used to stop quinn diff trying to parse Packages-arch-specific
@@ -65,7 +64,7 @@ arch_specific_packages_read (void)
 	buffer_length, packages_arch_specific_filename);
 
   read_arch_specific_packages (buffer_p, buffer_length);
-  xfree (buffer_p);
+  g_free (buffer_p);
 
 }
 
@@ -102,7 +101,7 @@ arch_specific_package_free_ht_entry (gpointer key,
 				     gpointer cruft __attribute__ ((unused)))
 {
 
-  xfree (key);
+  g_free (key);
 
 }
 
@@ -130,7 +129,7 @@ void open_arch_specific_file(FILE *fp, char **buffer_p, long *buffer_length)
   /* We don't do any memory management, we just ask for a chunk of
    * memory the size of the file */
 
-  *buffer_p = xmalloc (*buffer_length);
+  *buffer_p = g_malloc (*buffer_length);
 
   n_read = fread (*buffer_p, sizeof (char), *buffer_length, fp);
   if (n_read == 0)
@@ -180,7 +179,7 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
       k = 0;
       while (line[j] != ':' && j < strlen(line))
 	j++;
-      package_name = xmalloc (j + 1);
+      package_name = g_malloc (j + 1);
       for (k = 0, l = 0; k < j; k++, l++)
 	package_name[k] = line[l];
       package_name[k] ='\0';
@@ -201,7 +200,7 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
 
       k = 0;
       j = strlen (line) - l;
-      architectures = xmalloc (j + 1);
+      architectures = g_malloc (j + 1);
       while (k < j && line[l] != '#')
 	if (line[l] == '\t')
 	  {
@@ -249,9 +248,9 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
 	    }
 	}
 
-      xfree (line);
-      xfree (package_name);
-      xfree (architectures);
+      g_free (line);
+      g_free (package_name);
+      g_free (architectures);
 
     }
 
@@ -304,7 +303,7 @@ void check_parseable (const char *buffer_p, const long buffer_length)
 	  else
 	    fubar (NONSYS, "I can't understand this type of Packages-arch-specific file; please upgrade.");
 	}
-      xfree (line);
+      g_free (line);
     }
 
 }
