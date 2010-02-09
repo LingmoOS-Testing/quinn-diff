@@ -29,8 +29,6 @@
 #include "utils.h"
 #include "vercmp.h"
 
-void free_binaries (Qlist **list);
-
 void
 parse_sources (sources_info *source)
 {
@@ -39,7 +37,7 @@ parse_sources (sources_info *source)
   Qlist *want_list, *list_temp;
   char *binary, *prefixed_source_name;
   packages_ht_info *binary_data;
-  int j,k,l, q;
+  int i, q;
   boolean is_different;
 
   /* Read the Sources file, comparing to the the hash table of the
@@ -107,49 +105,13 @@ parse_sources (sources_info *source)
       debug(debug_sources, "parse_sources: priority = %s, section = %s, version = %s, binary = %s",
 	    source->priority, source->section, source->version, source->binary);
 
-      g_free (source->binaries);
-      if (!strchr(source->binary,','))
-	{
-	  /* We do this so we can consistently free the list's data nodes */
-	  binary = xstrdup (source->binary);
-	  source->binaries = qlist_append (source->binaries, binary);
-	}
-      else
-	{
-	  /* Dump the binary components into a linked list */
-
-	  /* This is horrible because strsep() isn't portable,
-	     strtok() isn't viable and I still can't get rid
-	     of my horrible over-optimizing habits */
-
-	  /* j = pointer into source->binary
-	     k = end of source->binary
-	     l = start of current binary in source->binary */
-	  j = 0;
-	  k = strlen (source->binary);
-	  l = 0;
-	  while (j <= k)
-	    {
-	      if (source->binary[j] == ',' || j == k)
-		{
-		  if (source->binary[l] == ' ')
-		    l++;
-		  binary = g_malloc (j-l+1);
-		  strncpy (binary, source->binary+l, j-l);
-		  binary[j-l] = '\0';
-		  source->binaries = qlist_append (source->binaries, binary);
-		  l = j+1;
-		}
-	      j++;
-	    }
-	}
-
       /* Process each binary */
 
-      list_temp = source->binaries;
-      while (list_temp)
-	{
-	  binary = list_temp->data;
+      source->binaries = g_strsplit(source->binary, ",", 0);
+      for(i = 0; source->binaries[i]; ++i)
+      {
+        debug (debug_sources, "parse_sources: source %s: processing binary %s", source->name, binary);
+        binary = source->binaries[i];
 	  if (!is_arch_specific(binary))
 	    {
 	      binary_data = packages_ht_lookup (binary);
@@ -191,32 +153,14 @@ parse_sources (sources_info *source)
 		  !in_arch_list(source->architecture,"any"))
 		error ("warning: %s has an architecture field of \"%s\" which doesn't include %s.", source->name, source->architecture+1, packages_architecture);
 	    }
-	  list_temp = list_temp->next;
 	}
 
-      free_binaries (&source->binaries);
+      g_strfreev(source->binaries);
 
     }
 
+  source->binaries = NULL;
   qlist_destroy (want_list);
-
-}
-
-void
-free_binaries (Qlist **list)
-{
-
-  Qlist *previous;
-
-  if (!*list) return;
-
-  do
-    {
-      g_free ((*list)->data);
-      previous = *list;
-      *list = (*list)->next;
-      g_free (previous);
-    } while (*list);
 
 }
 

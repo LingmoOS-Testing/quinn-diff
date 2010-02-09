@@ -36,7 +36,7 @@ struct _sources_info {
   char *version;
   char *binary;
   char *architecture;
-  Qlist *binaries;
+  char **binaries;
 };
 
 void parse_sources (sources_info *sources);
