@@ -113,51 +113,64 @@ parse_sources (sources_info *source)
         binary = g_strstrip(source->binaries[i]);
         debug (debug_sources, "parse_sources: source %s: processing binary %s", source->name, binary);
 
-	  if (!is_arch_specific(binary))
-	    {
-	      binary_data = packages_ht_lookup (binary);
-	      is_different = FALSE;
-	      /* If this binary package is not compiled... */
-	      if (!binary_data)
-		{
-		  debug (debug_sources, "parse_sources: %s from %s is uncompiled...", binary, source->name);
-		  output_ht_add (source, NULL, 0);
-		  is_different = TRUE;
-		}
-	      /* If it is compiled, make sure it's the same version... */
-	      else
-		{
-		  if (strcmp (source->version, binary_data->version))
-		    {
-		      q = compare_versions (source->version, binary_data->version, source->name);
-		      /* If the binary is newer than the source, ensure it's a binary
-                         from this source package */
-		      if ((q >= 1) &&
-			  (binary_data->source && (strcmp (binary_data->source, source->name))))
-			debug(debug_sources, "parse_sources: %s is from %s, not %s and  is a newer version (%s vs. %s) too.", binary, binary_data->source, source->name, binary_data->version, source->version);
-		      else
-			{
-			  debug (debug_sources, "parse_sources: %s from %s is different version-wise (%d)...", binary, source->name, q);
-			  output_ht_add (source, binary_data->version, q);
-			  is_different = TRUE;
-			}
-		    }
-		  else
-		    {
-		      if (strcmp(binary_data->architecture, "all"))
-			output_ht_add (source, binary_data->version, 0);
-		    }
-		}
+        if (is_arch_specific(binary))
+          continue;
 
-	      if (is_different &&
-		  !in_arch_list(source->architecture,packages_architecture) &&
-		  !in_arch_list(source->architecture,"any"))
-		error ("warning: %s has an architecture field of \"%s\" which doesn't include %s.", source->name, source->architecture+1, packages_architecture);
-	    }
-	}
+        /*
+         * If the Architecture list in the Sources file does not list the own
+         * architecture, then building is doomed to fail on the builder due
+         * to dpkg-dev aborting the build.  Thus log a debug message for each
+         * package not listed in P-a-s but still deactivated, but do not
+         * bother about them anymore.
+         */
+        if (!in_arch_list(source->architecture, packages_architecture) &&
+            !in_arch_list(source->architecture,"any")) {
+          if (!is_arch_specific(binary)) {
+            debug(debug_sources, "parse_sources: package %s: not buildable but not listed in arch specific", source->name, source->architecture + 1);
+          }
+          debug(debug_sources, "parse_sources: ignoring package %s: neither %s nor any in ('%s')", source->name, packages_architecture, source->architecture + 1);
+          continue;
+        }
+
+        binary_data = packages_ht_lookup (binary);
+        is_different = FALSE;
+
+        /* If this binary package is not compiled... */
+        if (!binary_data)
+        {
+          debug (debug_sources, "parse_sources: %s from %s is uncompiled...", binary, source->name);
+          output_ht_add (source, NULL, 0);
+          is_different = TRUE;
+        }
+        /* If it is compiled, make sure it's the same version... */
+        else
+        {
+          if (strcmp (source->version, binary_data->version))
+          {
+            q = compare_versions (source->version, binary_data->version, source->name);
+            /* If the binary is newer than the source, ensure it's a binary
+               from this source package */
+            if ((q >= 1) &&
+                (binary_data->source && (strcmp (binary_data->source, source->name))))
+            {
+              debug(debug_sources, "parse_sources: %s is from %s, not %s and  is a newer version (%s vs. %s) too.", binary, binary_data->source, source->name, binary_data->version, source->version);
+            }
+            else
+            {
+              debug (debug_sources, "parse_sources: %s from %s is different version-wise (%d)...", binary, source->name, q);
+              output_ht_add (source, binary_data->version, q);
+              is_different = TRUE;
+            }
+          }
+          else
+          {
+            if (strcmp(binary_data->architecture, "all"))
+              output_ht_add (source, binary_data->version, 0);
+          }
+        }
+      }
 
       g_strfreev(source->binaries);
-
     }
 
   source->binaries = NULL;
