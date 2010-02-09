@@ -70,9 +70,8 @@ parse_package (const char *buffer, long buffer_position, const int buffer_length
 	       Qlist *want_list)
 {
 
-  char *line;
+  char *line, *temp_line;
   Qlist *want_list_pointer;
-  int i;
 
   /* Initialize the want list */
   want_list_pointer = want_list;
@@ -94,16 +93,34 @@ parse_package (const char *buffer, long buffer_position, const int buffer_length
     {
       want_list_pointer = want_list;
 
-      /* We're not interested in descriptions, so we skip any lines that start with a space. */
+      /* If we ignored a line continuation before, ignore them here too. */
       if (buffer[buffer_position] == ' ')
-	{
-	  skip_line(buffer, &buffer_position, buffer_length);
-	  continue;
-	}
+      {
+        skip_line(buffer, &buffer_position, buffer_length);
+        continue;
+      }
 
-      i = 0;
+      line = NULL;
+      do {
+        temp_line = read_line (buffer, buffer_length, &buffer_position);
+        if (strlen(temp_line) == 0)
+          break;
 
-      line = read_line (buffer, buffer_length, &buffer_position);
+        /* Skip the description */
+        if (strncmp(temp_line, "Description: ", 13) == 0)
+          break;
+
+        if (line != NULL) {
+          temp_line = g_strjoin(NULL, line, temp_line + 1, NULL);
+          g_free(line);
+          debug (debug_utils, "parse_package: line continuation: %s", temp_line);
+        }
+
+        line = temp_line;
+      } while(buffer_position < buffer_length && buffer[buffer_position] == ' ');
+
+      if (line == NULL)
+        continue;
 
       debug (debug_utils, "parse_package: |->'%s'", line);
       /* Check the want list, to see if the line we have is one we need. */
