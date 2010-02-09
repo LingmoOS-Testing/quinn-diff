@@ -144,7 +144,9 @@ process_packages (packages_info *packages)
       g_free (packages->version);
       g_free (packages->source);
       g_free (packages->name);
-
+      packages->version = NULL;
+      packages->source = NULL;
+      packages->name = NULL;
     }
 
 }

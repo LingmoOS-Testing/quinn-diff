@@ -76,11 +76,11 @@ parse_sources (sources_info *source)
       sprintf (prefixed_source_name, "%%%s", source->name);
       q = is_arch_specific (prefixed_source_name);
       g_free (prefixed_source_name);
-      if (q)
-	{
-	  g_free (source->name);
-	  continue;
-	}
+      if (q) {
+        g_free (source->name);
+        source->name = NULL;
+        continue;
+      }
 
       /* If we're ignoring 'Architecture: all' packages, check this isn't */
       if (ignore_arch_all && in_arch_list(source->architecture, "all")
