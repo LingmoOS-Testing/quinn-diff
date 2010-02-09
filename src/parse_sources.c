@@ -110,8 +110,9 @@ parse_sources (sources_info *source)
       source->binaries = g_strsplit(source->binary, ",", 0);
       for(i = 0; source->binaries[i]; ++i)
       {
+        binary = g_strstrip(source->binaries[i]);
         debug (debug_sources, "parse_sources: source %s: processing binary %s", source->name, binary);
-        binary = source->binaries[i];
+
 	  if (!is_arch_specific(binary))
 	    {
 	      binary_data = packages_ht_lookup (binary);
