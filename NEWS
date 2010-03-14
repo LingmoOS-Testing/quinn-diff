@@ -1,7 +1,7 @@
 This is a list of user-visible changes in each released version, more
 detailed changes history can be found in the ChangeLog.
 
-Version 0.71 - UNRELEASED
+Version 0.71 - 14th March, 2010
 
 * Consider the Architectures line in the Sources file as authoriative.
   If it does not list the current architecture or `any' the package is
