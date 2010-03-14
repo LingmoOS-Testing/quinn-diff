@@ -100,7 +100,9 @@ main (int argc, char **argv)
   arch_specific_packages_ht_destroy ();
   output_ht_destroy ();
   g_free (sources->buffer);
+  g_free (sources->file_name);
   g_free (sources);
+  g_free (packages->file_name);
   g_free (packages);
   g_free (packages_architecture);
 
