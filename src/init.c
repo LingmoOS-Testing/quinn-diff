@@ -61,12 +61,12 @@ parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages
 	{
 	case 'a':
 	  g_free (packages_arch_specific_filename);
-	  packages_arch_specific_filename = xstrdup (optarg);
+	  packages_arch_specific_filename = g_strdup (optarg);
 	  break;
 
 	case 'A':
 	  g_free (packages_architecture);
-	  packages_architecture = xstrdup (optarg);
+	  packages_architecture = g_strdup (optarg);
 	  break;
 
 	case 'D':
@@ -93,12 +93,12 @@ parse_opt (int argc, char **argv, sources_info *sources, packages_info *packages
 
 	case 'p':
 	  g_free (packages->file_name);
-	  packages->file_name = xstrdup (optarg);
+	  packages->file_name = g_strdup (optarg);
 	  break;
 
 	case 's':
 	  g_free (sources->file_name);
-	  sources->file_name = xstrdup (optarg);
+	  sources->file_name = g_strdup (optarg);
 	  break;
 
 	case 'w':

@@ -136,7 +136,7 @@ parse_package (const char *buffer, long buffer_position, const int buffer_length
 		{
 		  debug (debug_utils, "parse_package: match on  = %s", (((want_node *)(want_list_pointer->data))->search_string));
 		  *((want_node *) want_list_pointer->data)->destination_string =
-		    xstrdup (line + (strlen (((want_node *)(want_list_pointer->data))->search_string)));
+		    g_strdup (line + (strlen (((want_node *)(want_list_pointer->data))->search_string)));
 		  ((want_node *)(want_list_pointer->data))->found = TRUE;
 		  break;
 		}
@@ -287,17 +287,6 @@ void read_file (const char *filename, FILE *fp, char **buffer_p, long *file_leng
   if (fclose (fp) == EOF)
     fubar (SYSERR, "read_file: couldn't close file \"%s\"", filename);
 
-}
-
-char *
-xstrdup (const char *s)
-{
-  char *r;
-
-  r = strdup (s);
-  if (!r)
-    fubar (SYSERR, "xstrdup: memory exhausted.");
-  return r;
 }
 
 boolean

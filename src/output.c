@@ -124,11 +124,11 @@ output_ht_add (const sources_info *source, const char *binary_version,
   /* Set up the output_info node for this package */
 
   package_to_add = g_malloc (sizeof(output_info));
-  package_to_add->name = xstrdup (source->name);
-  package_to_add->source_version = xstrdup (source->version);
+  package_to_add->name = g_strdup (source->name);
+  package_to_add->source_version = g_strdup (source->version);
   if (binary_version)
     {
-      package_to_add->binary_version = xstrdup (binary_version);
+      package_to_add->binary_version = g_strdup (binary_version);
       package_to_add->partial = TRUE;
       package_to_add->missing = FALSE;
     }
@@ -138,11 +138,11 @@ output_ht_add (const sources_info *source, const char *binary_version,
       package_to_add->partial = FALSE;
       package_to_add->missing = TRUE;
     }
-  package_to_add->priority = xstrdup (source->priority);
-  package_to_add->section = xstrdup (source->section);
+  package_to_add->priority = g_strdup (source->priority);
+  package_to_add->section = g_strdup (source->section);
   package_to_add->compare_versions_result = compare_versions_result;
 
-  key = xstrdup(source->name);
+  key = g_strdup(source->name);
 
   /* And add it (or rather, a pointer to it) to the hash table */
 

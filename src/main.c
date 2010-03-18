@@ -62,9 +62,9 @@ main (int argc, char **argv)
   program_name = argv[0];
   sources->buffer_pos = 0;
   packages->buffer_pos = 0;
-  sources->file_name = xstrdup ("Sources");
-  packages->file_name = xstrdup ("Packages");
-  packages_arch_specific_filename = xstrdup ("/etc/Packages-arch-specific");
+  sources->file_name = g_strdup ("Sources");
+  packages->file_name = g_strdup ("Packages");
+  packages_arch_specific_filename = g_strdup ("/etc/Packages-arch-specific");
   packages_architecture = NULL;
   parse_opt (argc, argv, sources, packages);
 

@@ -93,10 +93,10 @@ parse_sources (sources_info *source)
       /* Sanity check source package's fields before continuing */
 
       if (!source->section)
-	source->section = xstrdup ("");
+	source->section = g_strdup ("");
 
       if (!source->priority)
-	source->priority = xstrdup ("-");
+	source->priority = g_strdup ("-");
 
       list_temp = want_find (want_list, "Version: ");
       if (!((want_node *)(list_temp->data))->found)

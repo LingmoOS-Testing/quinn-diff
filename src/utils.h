@@ -32,7 +32,6 @@ void skip_line (const char *buffer, long *counter, const long buffer_length);
 void skip_to_next_package (const char *buffer, long *buffer_position, const long buffer_length);
 char *read_line (const char *buffer, const long buffer_length, long *counter);
 void read_file (const char *filename, FILE *fp, char **buffer_p, long *file_length);
-char *xstrdup (const char *s);
 #define strmove(dest, src) memmove (dest, src, strlen (src) + 1)
 boolean in_arch_list(const char *list, const char *arch);
 

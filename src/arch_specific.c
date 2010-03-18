@@ -267,7 +267,7 @@ void arch_specific_packages_ht_add (char *package)
 
   char *key;
 
-  key = xstrdup (package);
+  key = g_strdup (package);
 
   debug (debug_as, "arch_specific_hash_add: Adding \"%s\" to arch specific hash table", package);
 

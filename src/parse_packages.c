@@ -173,14 +173,14 @@ packages_ht_add (const char *package, const char *version, const char *source, c
 
   debug(debug_packages, "packages_ht_add: %s_%s (%s) to Packages hash table", package, version, source);
 
-  key = xstrdup (package);
+  key = g_strdup (package);
   data = g_malloc (sizeof(packages_ht_info));
-  data->version = xstrdup(version);
+  data->version = g_strdup(version);
   if (source)
-    data->source = xstrdup(source);
+    data->source = g_strdup(source);
   else
     data->source = NULL;
-  data->architecture = xstrdup(architecture);
+  data->architecture = g_strdup(architecture);
 
   g_hash_table_insert (packages_hash_table, key, data);
 
