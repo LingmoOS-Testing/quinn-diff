@@ -16,6 +16,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -152,7 +153,8 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
   char *architectures;
   char *package_name;
   long i;
-  unsigned int j, k, l;
+  int j;
+  unsigned int k, l;
 
   check_parseable (buffer_p, buffer_length);
 
@@ -193,13 +195,17 @@ void read_arch_specific_packages (const char *buffer_p, const long buffer_length
         continue;
       }
 
+      if (strlen (line) == l) {
+        fubar(SYSERR, "read_arch_specific_packages: Parse error: %s", line);
+      }
+
       /* Skip over the : separator */
       l++;
 
       /* Architectures is everything after that (excluding comments) */
-
       k = 0;
-      j = strlen (line) - l;
+      j = strlen(line) - (l - 1);
+      assert(j > 0);
       architectures = g_malloc (j + 1);
       while (k < j && line[l] != '#')
 	if (line[l] == '\t')
