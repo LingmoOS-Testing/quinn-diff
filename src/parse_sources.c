@@ -82,6 +82,8 @@ parse_sources (sources_info *source)
         continue;
       }
 
+      g_strstrip (source->architecture);
+
       /* If we're ignoring 'Architecture: all' packages, check this isn't */
       if (ignore_arch_all && in_arch_list(source->architecture, "all")
 	  && !in_arch_list(source->architecture, packages_architecture))
@@ -124,11 +126,12 @@ parse_sources (sources_info *source)
          * bother about them anymore.
          */
         if (!in_arch_list(source->architecture, packages_architecture) &&
-            !in_arch_list(source->architecture,"any")) {
+            !in_arch_list(source->architecture, "any") &&
+            strcmp(source->architecture, "all") != 0) {
           if (!is_arch_specific(binary)) {
-            debug(debug_sources, "parse_sources: package %s: not buildable but not listed in arch specific", source->name, source->architecture + 1);
+            debug(debug_sources, "parse_sources: package %s: not buildable due to ('%s') but not listed in arch specific", source->name, source->architecture);
           }
-          debug(debug_sources, "parse_sources: ignoring package %s: neither %s nor any in ('%s')", source->name, packages_architecture, source->architecture + 1);
+          debug(debug_sources, "parse_sources: ignoring package %s: neither %s nor any nor all in ('%s')", source->name, packages_architecture, source->architecture);
           continue;
         }
 
