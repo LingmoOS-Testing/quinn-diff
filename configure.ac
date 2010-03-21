@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT([quinn-diff], [0.71], [pkern@debian.org])
+AC_INIT([quinn-diff], [0.72], [pkern@debian.org])
 AC_CONFIG_AUX_DIR(scripts)
 AM_INIT_AUTOMAKE([-Wall std-options check-news -Wno-portability])
 AM_CONFIG_HEADER(config.h)
