@@ -1,6 +1,13 @@
 This is a list of user-visible changes in each released version, more
 detailed changes history can be found in the ChangeLog.
 
+Version 0.72 - 21th March, 2010
+
+* Bail out on incorrectly formatted Packages-arch-specific files.
+* Adjust the handling of arch `all' packages to allow them to be
+  autobuilt properly.
+
+
 Version 0.71 - 14th March, 2010
 
 * Consider the Architectures line in the Sources file as authoriative.
